@@ -39,12 +39,14 @@ public class InitViewer extends ActionBarActivity {
                     Intent i = new Intent(InitViewer.this, Story1.class);
                     i.putExtra("netStat", "true");
                     startActivity(i);
+                    finish();
                 }
                 else
                 {
                     Intent i = new Intent(InitViewer.this, Story1.class);
                     i.putExtra("netStat", "false");
                     startActivity(i);
+                    finish();
                 }
             }
         }, 3000);

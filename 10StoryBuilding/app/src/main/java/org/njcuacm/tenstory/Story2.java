@@ -3,7 +3,11 @@ package org.njcuacm.tenstory;
 /**
  * Created by Saurabh on 2/7/2015.
  */
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Random;
+import java.util.Scanner;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import org.njcuacm.adapters.DisplayTextAdapter;
 import org.njcuacm.adapters.TextAdapter;
+import org.njcuacm.filemanager.InputOutput;
 
 public class Story2 extends ActionBarActivity {
     private TextAdapter adapter;
@@ -27,12 +32,18 @@ public class Story2 extends ActionBarActivity {
     private static Random random;
     public int storycount = 1;
     public ListView lv;
+    private Scanner s;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story2);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        try {
+            s = new Scanner(new File(InputOutput.getFileDirectory() + "/str/" + Story1.story1));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         random = new Random();
         ipsum = "Lorem Ipsum";
         final Button next = (Button) findViewById(R.id.next);
@@ -99,7 +110,24 @@ public class Story2 extends ActionBarActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switch (storycount)
+
+                    if (s.hasNextLine())
+                    {
+                        String speaker = s.hasNextLine() ? s.nextLine() : "";
+                        String text = s.hasNextLine() ? s.nextLine() : "";
+                        adapter.add(new DisplayTextAdapter(false,
+                                text, speaker));
+                        scrollListView();
+                    }
+                    else
+                    {
+                        editText1.setVisibility(View.VISIBLE);
+                        SEND.setVisibility(View.VISIBLE);
+                        next.setVisibility(View.INVISIBLE);
+                    }
+
+
+                /*switch (storycount)
                 {
                     case 1:
                         adapter.add(new DisplayTextAdapter(false,
@@ -248,7 +276,7 @@ public class Story2 extends ActionBarActivity {
                         break;
                     case 30:
                         break;
-                    /*case 31:
+                    *//*case 31:
                         adapter.add(new DisplayTextAdapter(false,
                                 "",
                                 ""));
@@ -263,7 +291,7 @@ public class Story2 extends ActionBarActivity {
                     case 34:
                         adapter.add(new DisplayTextAdapter(false,
                                 "",
-                                ""));*/
+                                ""));*//*
 
                         default:
                             editText1.setVisibility(View.VISIBLE);
@@ -272,11 +300,11 @@ public class Story2 extends ActionBarActivity {
                 }
                 storycount++;
                 System.out.println(storycount);
-                scrollListView();
+                scrollListView();*/
             }
         });
         System.out.println(storycount);
-        addItems();
+        //addItems();
     }
 
     private void addItems() {
