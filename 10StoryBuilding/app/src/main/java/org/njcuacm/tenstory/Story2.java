@@ -87,7 +87,7 @@ public class Story2 extends ActionBarActivity {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
-                    if (editText1.getText().toString() != null || !editText1.getText().toString().equals("")) {
+                    if (editText1.getText().toString() != null) {
                         adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
                         editText1.setText("");
                         scrollListView();
@@ -96,32 +96,31 @@ public class Story2 extends ActionBarActivity {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
-                        diag.setMessage("Congratulations! You've finished Story One!\n\n" +
-                                "You have now unlocked Story Two!");
-                        diag.setCancelable(false);
-                        diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
+                        if(editText1.getText().toString().toLowerCase().equals("no")) {
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
+                            diag.setMessage("Congratulations! You've finished Story One!\n\n" +
+                                    "You have now unlocked Story Two!");
+                            diag.setCancelable(false);
+                            diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // TODO Auto-generated method stub
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
 
-                            }
-                        });
+                                }
+                            });
 
-                        final AlertDialog dialog = diag.create();
-                        dialog.show();
-                        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
-                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                Intent i = new Intent(Story2.this, Story1.class);
-                                startActivity(i);
-                                finish();
-                            }
-                        });
+                            final AlertDialog dialog = diag.create();
+                            dialog.show();
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent i = new Intent(Story2.this, Story1.class);
+                                    startActivity(i);
+                                    finish();
+                                }
+                            });
+                        }
                     }
                     return true;
                 }
@@ -137,7 +136,7 @@ public class Story2 extends ActionBarActivity {
         SEND.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText1.getText().toString() != null || !editText1.getText().toString().equals("")) {
+                if (editText1.getText().toString() != null) {
                     adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
@@ -146,6 +145,31 @@ public class Story2 extends ActionBarActivity {
                     editText1.clearFocus();
                     imm.hideSoftInputFromInputMethod(editText1.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
                     scrollListView();
+                    if(editText1.getText().toString().toLowerCase().equals("no")) {
+                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
+                        diag.setMessage("Congratulations! You've finished Story One!\n\n" +
+                                "You have now unlocked Story Two!");
+                        diag.setCancelable(false);
+                        diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+
+                        final AlertDialog dialog = diag.create();
+                        dialog.show();
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent i = new Intent(Story2.this, Story1.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
+                    }
                 }
 
             }
