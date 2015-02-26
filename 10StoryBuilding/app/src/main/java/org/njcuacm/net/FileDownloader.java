@@ -130,21 +130,35 @@ public class FileDownloader {
         }
     }
 
-    public static int getOnlineFileSize(String fileURL) {
-        HttpURLConnection conn = null;
-        try {
-            URL url= new URL(fileURL);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("HEAD");
-            conn.getInputStream();
-            return conn.getContentLength();
-        } catch (IOException e) {
-            return -1;
-        } finally {
-            if (conn != null) {
-                conn.disconnect();
+    public static int getOnlineFileSize(final String fileURL) {
+        final int[] result = {0};
+        Thread thread = new Thread(){
+            @Override
+            public void run() {
+                HttpURLConnection conn = null;
+                try {
+                    URL url = new URL(fileURL);
+                    conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("HEAD");
+                    conn.getInputStream();
+                    result[0] = conn.getContentLength();
+                } catch (IOException e) {
+                    result[0] =  -1;
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+                super.run();
             }
+        };
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        return result[0];
     }
 
 

@@ -5,14 +5,19 @@ package org.njcuacm.tenstory;
  */
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +26,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Toast;
+
 import org.njcuacm.adapters.DisplayTextAdapter;
 import org.njcuacm.adapters.TextAdapter;
 import org.njcuacm.filemanager.InputOutput;
@@ -33,11 +42,14 @@ public class Story2 extends ActionBarActivity {
     public int storycount = 1;
     public ListView lv;
     private Scanner s;
+    int co = 0;
+    int cont = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story2);
+        setTitle("Story One");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         try {
             s = new Scanner(new File(InputOutput.getFileDirectory() + "/str/" + Story1.story1));
@@ -75,10 +87,41 @@ public class Story2 extends ActionBarActivity {
                 // If the event is a key-down event on the "enter" button
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     // Perform action on key press
-                    if (editText1.getText().toString() != null) {
+                    if (editText1.getText().toString() != null || !editText1.getText().toString().equals("")) {
                         adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
                         editText1.setText("");
                         scrollListView();
+                        try {
+                            Thread.sleep(300);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
+                        diag.setMessage("Congratulations! You've finished Story One!\n\n" +
+                                "You have now unlocked Story Two!");
+                        diag.setCancelable(false);
+                        diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+
+                        final AlertDialog dialog = diag.create();
+                        dialog.show();
+                        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                Intent i = new Intent(Story2.this, Story1.class);
+                                startActivity(i);
+                                finish();
+                            }
+                        });
                     }
                     return true;
                 }
@@ -94,7 +137,7 @@ public class Story2 extends ActionBarActivity {
         SEND.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (editText1.getText().toString() != null || editText1.getText().toString() != "") {
+                if (editText1.getText().toString() != null || !editText1.getText().toString().equals("")) {
                     adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
@@ -110,14 +153,146 @@ public class Story2 extends ActionBarActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                     if (s.hasNextLine())
                     {
-                        String speaker = s.hasNextLine() ? s.nextLine() : "";
-                        String text = s.hasNextLine() ? s.nextLine() : "";
-                        adapter.add(new DisplayTextAdapter(false,
-                                text, speaker));
-                        scrollListView();
+                        try {
+                            Scanner scanner = new Scanner(new File(InputOutput.getFileDirectory() + "/ch/" + Story1.ch1));
+                            if (scanner.hasNextLine()) {
+                                String choice = scanner.hasNextLine() ? scanner.nextLine() : "";
+                                final ArrayList<String> c1 = new ArrayList<String>(Arrays.asList(choice.split(",")));
+                                choice = scanner.hasNextLine() ? scanner.nextLine() : "";
+                                final ArrayList<String> c2 = new ArrayList<String>(Arrays.asList(choice.split(",")));
+                                String speaker = s.hasNextLine() ? s.nextLine() : "";
+                                String text = s.hasNextLine() ? s.nextLine() : "";
+                                    if (text.contains("__") && co == 0) {
+                                        // Set an EditText view to get user input
+                                        //final EditText getChoice = new EditText(Story2.this);
+                                        //getChoice.setPadding(10, 0, 10, 0);
+                                        final RadioGroup group = new RadioGroup(Story2.this);
+                                        final RadioButton rb1 = new RadioButton(Story2.this);
+                                        final RadioButton rb2 = new RadioButton(Story2.this);
+                                        final RadioButton rb3 = new RadioButton(Story2.this);
+                                        rb1.setText(c1.get(0));
+                                        rb2.setText(c1.get(1));
+                                        rb3.setText(c1.get(2));
+                                        group.addView(rb1);
+                                        group.addView(rb2);
+                                        group.addView(rb3);
+                                        group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+                                        rb1.setGravity(Gravity.FILL_HORIZONTAL);
+                                        rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                                        rb3.setGravity(Gravity.FILL_HORIZONTAL);
+                                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
+                                        diag.setView(group);
+                                        diag.setMessage(speaker + ": " + text + "\n\nCHOICES: ");
+                                        diag.setCancelable(false);
+                                        diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // TODO Auto-generated method stub
+
+                                            }
+                                        });
+                                        final AlertDialog dialog = diag.create();
+                                        dialog.show();
+                                        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(View v)
+                                            {
+                                                if(rb3.isChecked())
+                                                {
+                                                    Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                                    cont = 1;
+                                                    co++;
+                                                    dialog.dismiss();
+                                                }
+                                                else
+                                                {
+                                                    //The dialog should stay open here...
+                                                    Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                                    cont = 0;
+                                                }
+                                            }
+                                        });
+                                    }
+                                else if (text.contains("__") && co == 1) {
+                                        // Set an EditText view to get user input
+                                        //final EditText getChoice = new EditText(Story2.this);
+                                        //getChoice.setPadding(10, 0, 10, 0);
+                                        final RadioGroup group = new RadioGroup(Story2.this);
+                                        final RadioButton rb1 = new RadioButton(Story2.this);
+                                        final RadioButton rb2 = new RadioButton(Story2.this);
+                                        final RadioButton rb3 = new RadioButton(Story2.this);
+                                        rb1.setText(c2.get(0));
+                                        rb2.setText(c2.get(1));
+                                        rb3.setText(c2.get(2));
+                                        group.addView(rb1);
+                                        group.addView(rb2);
+                                        group.addView(rb3);
+                                        group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+                                        rb1.setGravity(Gravity.FILL_HORIZONTAL);
+                                        rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                                        rb3.setGravity(Gravity.FILL_HORIZONTAL);
+                                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
+                                        diag.setView(group);
+                                        diag.setMessage(speaker + ": " + text + "\n\nCHOICES: ");
+                                        diag.setCancelable(false);
+                                        diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
+
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                // TODO Auto-generated method stub
+
+                                            }
+                                        });
+
+                                        final AlertDialog dialog = diag.create();
+                                        dialog.show();
+                                        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+                                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener()
+                                        {
+                                            @Override
+                                            public void onClick(View v)
+                                            {
+                                                if(rb1.isChecked())
+                                                {
+                                                    Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                                    cont = 2;
+                                                    co++;
+                                                    dialog.dismiss();
+                                                }
+                                                else
+                                                {
+                                                    //The dialog should stay open here...
+                                                    Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                                    cont = 1;
+                                                }
+                                            }
+                                        });
+                                    }
+                                adapter.add(new DisplayTextAdapter(false,
+                                        text, speaker));
+                                scrollListView();
+                            }
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            AlertDialog.Builder a = new AlertDialog.Builder(Story2.this);
+                            a.setTitle("Fatal Error Occurred")
+                                    .setMessage("Additional files are required to continue.")
+                                    .setCancelable(false)
+                                    .setPositiveButton("DOWNLOAD THEM", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            startActivity(new Intent(Story2.this, Story1.class));
+                                            finish();
+                                        }
+                                    })
+                                    .show();
+                        }
+
                     }
                     else
                     {
@@ -125,186 +300,9 @@ public class Story2 extends ActionBarActivity {
                         SEND.setVisibility(View.VISIBLE);
                         next.setVisibility(View.INVISIBLE);
                     }
-
-
-                /*switch (storycount)
-                {
-                    case 1:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Yeah, you and me both.",
-                                "Beth Matos"));
-                        break;
-                    case 2:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Believe me when I say that Bennett’s Big Steaks Restaurant is not going to be the same without you.",
-                                "Kristen Kosakowski"));
-                        break;
-                    case 3:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Thanks Kristen.",
-                                "Beth Matos"));
-                        break;
-                    case 4:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "I mean it.",
-                                "Kristen Kosakowski"));
-                        break;
-                    case 5:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "So did you tell your husband yet?",
-                                ""));
-                        break;
-                    case 6:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Oh, yeah.",
-                                "Beth Matos"));
-                        break;
-                    case 7:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Of course.",
-                                ""));
-                        break;
-                    case 8:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Jeff was really understanding.",
-                                ""));
-                        break;
-                    case 9:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "And he took your word for it and everything?",
-                                "Kristen Kosakowski"));
-                        break;
-                    case 10:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "If that was me, my husband would have thought I was full of it! ",
-                                ""));
-                        break;
-                    case 11:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "But then again he never believes anything I say anyway.",
-                                ""));
-                        break;
-                    case 12:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Girl, you are so lucky.",
-                                ""));
-                        break;
-                    case 13:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "…Lucky?",
-                                "Beth Matos"));
-                        break;
-                    case 14:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Yeah! ",
-                                "Kristen Kosakowski"));
-                        break;
-                    case 15:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Lucky!",
-                                "Not every girl can kiss the boss and then go home to kiss her husband."));
-                        break;
-                    case 16:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "----------------------------------------------------------------------",
-                                "December 26, 6:21 pm"));
-                        break;
-                    case 17:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "So tired…But somebody has to wait these tables at work!",
-                                "Beth Matos"));
-                        break;
-                    case 18:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Hey honey, sorry that work is so tough. ",
-                                "Jeff Matos"));
-                        break;
-                    case 19:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Is Bennett still driving you girls crazy?",
-                                ""));
-                        break;
-                    case 20:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Ha. Yeah. ",
-                                "Beth Matos"));
-                        break;
-                    case 21:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "You know him, always yelling about how we’re all useless.",
-                                ""));
-                        break;
-                    case 22:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Man, I can’t believe I’m related to that guy. ",
-                                "Jeff Matos"));
-                        break;
-                    case 23:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "If anyone asks at the New Years’ party next week, I’m denying it.",
-                                ""));
-                        break;
-                    case 24:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Stepbrothers don’t really count, do they?",
-                                ""));
-                        break;
-                    case 25:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Yeah. Right. ",
-                                "Beth Matos"));
-                        break;
-                    case 26:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Listen, I can’t talk right now, a bunch of customers came in. ",
-                                ""));
-                        break;
-                    case 27:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Can we talk when I get home?",
-                                ""));
-                        break;
-                    case 28:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "Yeah sure, honey.  ",
-                                "Jeff Matos"));
-                        break;
-                    case 29:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "See you in a few.",
-                                ""));
-                        break;
-                    case 30:
-                        break;
-                    *//*case 31:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "",
-                                ""));
-                    case 32:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "",
-                                ""));
-                    case 33:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "",
-                                ""));
-                    case 34:
-                        adapter.add(new DisplayTextAdapter(false,
-                                "",
-                                ""));*//*
-
-                        default:
-                            editText1.setVisibility(View.VISIBLE);
-                            SEND.setVisibility(View.VISIBLE);
-                            next.setVisibility(View.INVISIBLE);
-                }
-                storycount++;
-                System.out.println(storycount);
-                scrollListView();*/
             }
         });
         System.out.println(storycount);
-        //addItems();
     }
 
     private void addItems() {
@@ -334,5 +332,16 @@ public class Story2 extends ActionBarActivity {
                 lv.setSelection(adapter.getCount() - 1);
             }
         });
+    }
+
+    class DiagListenerForChoices implements View.OnClickListener {
+        private final Dialog dialog;
+        public DiagListenerForChoices(Dialog dialog) {
+            this.dialog = dialog;
+        }
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 }
