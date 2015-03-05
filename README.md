@@ -1,0 +1,18 @@
+Ten-Story Building App Overview
+
+Ten-Story Building is a handheld app  designed to teach one of the more difficult aspects of English for non-native speakers—the phrasal verb (Liao & Fukuya,, 2004; Lui, 2011).   Though there is debate on a standard definition of the phrasal verb, a working definition is a verb + prepositional phrase whose combination is relatively arbitrary (e.g. succeed at, based on) (Nassaj  & Tian, 2012).  Phrase verbs also include the verb ‘to be’ with the addition of adjective + prepositional  phrase (e.g. similar to)  and adverb + prepositional phrase (e.g. friendly with) with relatively arbitrary combinations. 
+The combinations are considered relatively arbitrary because sometimes a figurative or literal connection can be deduced (“fill up” “hand out”, but often the combination of the words are (e.g. “depend on” instead of “depend in”, “look up” instead of “look for”, and “ashamed of” “ashamed in”).
+We used a set of 100 Phrasal Verbs.  This set consisted of the 50 most common phrasal verbs (Lui, 2011) and 50 that were selected because they are difficult but important for non-native speakers.  
+The app is a game-like teaching environment in which a player follow stories through the social media posts, text messages, and emails of different people. Each exchange is a unique, high interest story, aimed to engage college-age students.  Authenticity is a key feature, but the stories follow the conventions of standard English.  
+To move forward in the story, a user must correctly select a phrasal verb in context.   Each phrasal verb is assessed in context after it has appeared in context, so a user can remember the use, scroll back to reread it, or guess.  There is no profanity, but the stories do contain adult situations (drug use, marital infidelity, sexual harassment), addressed in respectful and responsible ways.  We would recommend this app for users 18 and older.  We wanted an app that would specifically address the interests of college age adults, yet without offending sensibilities or cultures.   
+The phrasal verb lends itself to these authentic and emotionally charged stories.  It is a syntactical unit, a piece of language, that conveys a united and unique meaning.  Authentic conversations about important events and feelings seemed to be the most important place for a phrasal verb. 
+Each of the 17 stories contains a set of  8-12 phrasal verbs from the set of 100.   A player must chose the correct phrasal verb to unlock the level.  Every phrasal verb is used in context before it is assessed, so the app is a teaching tool (and student will come across at least 200 uses of phrasal verbs during the entire game). A player can remember or scroll back to see its correct use.  
+
+Works Cited
+
+Lui, D. (2011).  The most frequently used English Phrasal verbs in American and British English: A multicorpus examination.  TESOL Quarterly, Vol. 45 (4)
+Hayati A, Jalilifar A, & Mashhadi, A. (2013). Using short message service (SMS) to teach English idioms to EFL students.   British Journal of Educational Technology, 44 (1).
+Kim, H & Kwon, Y. (2012). Exploring smartphone applications for effective mobile-assisted language learning. Multimedia-Assisted Language Learning, 15(1), 31-57.
+Liao, Y & Fukuya, Y. (2004) Avoidance of Phrasal Verbs: The case of Chinese learners of English.  Language Learning 54 (2). pp193–226
+Nassaji, H. & Tian, J. (2012) Collaborative and individual output tasks and their effects on learning English phrasal verbs.  The Modern Language Journal, 96 (3)
+White, B. (2012). A conceptual approach to the instruction of phrasal verbs. The Modern Language Journal, 96(3).
