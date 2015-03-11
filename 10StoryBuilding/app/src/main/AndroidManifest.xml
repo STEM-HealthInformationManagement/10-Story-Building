@@ -33,7 +33,13 @@
         </activity>
         <activity
             android:name=".Story3"
-            android:label="@string/title_activity_story3" >
+            android:label="@string/title_activity_story3"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".StoryViewer"
+            android:label="@string/title_activity_story_viewer"
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 

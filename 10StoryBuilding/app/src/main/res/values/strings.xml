@@ -9,5 +9,6 @@
 Read the messages on these phones.  Solve the phrasal verbs and then solve the dilemmas at the end of each story.\n\n\n
     </string>
     <string name="title_activity_story3">Story Three</string>
+    <string name="title_activity_story_viewer">Stories</string>
 
 </resources>

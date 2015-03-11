@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.FileHandler;
@@ -182,13 +183,13 @@ public class InputOutput {
      *
      */
     public static void Write(String file, String data) {
-        File f1 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/");
-        File f2 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+        File f1 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/");
+        File f2 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
         try {
             f1.mkdirs();
             f2.createNewFile();
             //context.openFileInput(file);
-            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
             byte[] bytedData = data.getBytes();
             fos.write(bytedData);
             fos.close();
@@ -211,13 +212,13 @@ public class InputOutput {
      *
      */
     public static void Write(String file, long data) {
-        File f1 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/");
-        File f2 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+        File f1 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/");
+        File f2 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
         try {
             f1.mkdirs();
             f2.createNewFile();
             //context.openFileInput(file);
-            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+            FileOutputStream fos = new FileOutputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
             byte[] bytedData = ByteBuffer.allocate(8).putLong(data).array();
             fos.write(bytedData);
             fos.close();
@@ -244,7 +245,7 @@ public class InputOutput {
         String result = "";
 
 		    /*try {
-		        InputStream inputStream = context.openFileInput(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+		        InputStream inputStream = context.openFileInput(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
 
 		        if ( inputStream != null ) {
 		            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -266,7 +267,7 @@ public class InputOutput {
 		        Log.e("io_error", "Can not read file: " + e.toString());
 		    }
 */
-        File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+        File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
         StringBuilder sb = new StringBuilder();
         try {
             BufferedReader br = new BufferedReader(new FileReader(f));
@@ -297,8 +298,8 @@ public class InputOutput {
 
         long result = 0L;
         try{
-            //File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file + vp.viper);
-            FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+            //File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file + vp.viper);
+            FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             String line;
@@ -337,8 +338,8 @@ public class InputOutput {
 
         int result = 0;
         try{
-            //File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file + vp.viper);
-            FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + file);
+            //File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file + vp.viper);
+            FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
             BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
 
             String line;
@@ -362,6 +363,27 @@ public class InputOutput {
         }
         return result;
 
+    }
+
+    public static ArrayList<String> readStringIntoArrayList(String file) {
+
+        ArrayList<String> result = new ArrayList<String>();
+        File f = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/" + file);
+        StringBuilder sb = new StringBuilder();
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                result.add(sb.toString());
+            }
+            br.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     public static String getFileDirectory()

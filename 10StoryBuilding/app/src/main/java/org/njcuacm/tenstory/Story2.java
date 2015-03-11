@@ -15,19 +15,25 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnKeyListener;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.njcuacm.adapters.DisplayTextAdapter;
@@ -44,23 +50,44 @@ public class Story2 extends ActionBarActivity {
     private Scanner s;
     int co = 0;
     int cont = 0;
+    int sp = InputOutput.ReadInteger("stn/" + Story1.sys);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story2);
-        setTitle("Story One");
+        setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         try {
             s = new Scanner(new File(InputOutput.getFileDirectory() + "/str/" + Story1.story1));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        random = new Random();
-        ipsum = "Lorem Ipsum";
+        if(sp <= 0)
+        {
+            InputOutput.Write("stn/" + Story1.sys, "100");
+        }
+        sp = InputOutput.ReadInteger("stn/" + Story1.sys);
         final Button next = (Button) findViewById(R.id.next);
         lv = (ListView) findViewById(R.id.listView1);
         final Button SEND = (Button) findViewById(R.id.send);
+
+        //The Following is to customize the Action Bar of Story1 view.
+
+        /*final RelativeLayout relativeLayout = new RelativeLayout(this);
+        relativeLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT));
+        final TextView pntView = new TextView(this);
+        pntView.setLeft(555);
+        pntView.setText(Integer.toString(100));
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(450, 25, 0, 0);
+        pntView.setLayoutParams(lp);
+        pntView.setGravity(Gravity.RIGHT);
+        relativeLayout.addView(pntView);
+        ActionBar bar = getSupportActionBar();
+        bar.setCustomView(relativeLayout);
+        bar.setDisplayShowCustomEnabled(true);
+        bar.setTitle("Story One");*/
         final AlertDialog.Builder ab = new AlertDialog.Builder(this);
         ab.setTitle("")
                 .setMessage("Characters are: Beth Matos, Kristen Kosakowski, Amy, Jeff Matos, Bennett")
@@ -82,6 +109,7 @@ public class Story2 extends ActionBarActivity {
         editText1 = (EditText) findViewById(R.id.editText1);
         editText1.setVisibility(View.INVISIBLE);
         SEND.setVisibility(View.INVISIBLE);
+        editText1.setImeActionLabel("CHECK", EditorInfo.IME_ACTION_GO);
         editText1.setOnKeyListener(new OnKeyListener() {
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 // If the event is a key-down event on the "enter" button
@@ -89,13 +117,8 @@ public class Story2 extends ActionBarActivity {
                     // Perform action on key press
                     if (editText1.getText().toString() != null) {
                         adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
-                        editText1.setText("");
+
                         scrollListView();
-                        try {
-                            Thread.sleep(300);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         if(editText1.getText().toString().toLowerCase().equals("no")) {
                             AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
                             diag.setMessage("Congratulations! You've finished Story One!\n\n" +
@@ -116,11 +139,15 @@ public class Story2 extends ActionBarActivity {
                                 @Override
                                 public void onClick(View v) {
                                     Intent i = new Intent(Story2.this, Story1.class);
+                                    if(sp <= 120) {
+                                        InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
+                                    }
                                     startActivity(i);
                                     finish();
                                 }
                             });
                         }
+                        editText1.setText("");
                     }
                     return true;
                 }
@@ -141,7 +168,7 @@ public class Story2 extends ActionBarActivity {
                     InputMethodManager imm = (InputMethodManager) getSystemService(
                             Context.INPUT_METHOD_SERVICE);
 
-                    editText1.setText("");
+
                     editText1.clearFocus();
                     imm.hideSoftInputFromInputMethod(editText1.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
                     scrollListView();
@@ -165,11 +192,14 @@ public class Story2 extends ActionBarActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent i = new Intent(Story2.this, Story1.class);
-                                startActivity(i);
+                                if(sp <= 120) {
+                                    InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
+                                }                                startActivity(i);
                                 finish();
                             }
                         });
                     }
+                    editText1.setText("");
                 }
 
             }
@@ -229,6 +259,8 @@ public class Story2 extends ActionBarActivity {
                                                 if(rb3.isChecked())
                                                 {
                                                     Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                                    sp += 10;
+                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 1;
                                                     co++;
                                                     dialog.dismiss();
@@ -237,6 +269,8 @@ public class Story2 extends ActionBarActivity {
                                                 {
                                                     //The dialog should stay open here...
                                                     Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                                    sp -= 15;
+                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 0;
                                                 }
                                             }
@@ -284,6 +318,8 @@ public class Story2 extends ActionBarActivity {
                                                 if(rb1.isChecked())
                                                 {
                                                     Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                                    sp += 10;
+                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 2;
                                                     co++;
                                                     dialog.dismiss();
@@ -292,6 +328,8 @@ public class Story2 extends ActionBarActivity {
                                                 {
                                                     //The dialog should stay open here...
                                                     Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                                    sp -= 15;
+                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 1;
                                                 }
                                             }
