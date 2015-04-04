@@ -119,7 +119,7 @@ public class Story2 extends ActionBarActivity {
                         adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
 
                         scrollListView();
-                        if(editText1.getText().toString().toLowerCase().equals("no")) {
+                        if (editText1.getText().toString().toLowerCase().equals("no")) {
                             AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
                             diag.setMessage("Congratulations! You've finished Story One!\n\n" +
                                     "You have now unlocked Story Two!");
@@ -138,8 +138,8 @@ public class Story2 extends ActionBarActivity {
                             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent i = new Intent(Story2.this, Story1.class);
-                                    if(sp <= 120) {
+                                    Intent i = new Intent(Story2.this, StoryViewer.class);
+                                    if (sp <= 120) {
                                         InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
                                     }
                                     startActivity(i);
@@ -191,7 +191,7 @@ public class Story2 extends ActionBarActivity {
                         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent i = new Intent(Story2.this, Story1.class);
+                                Intent i = new Intent(Story2.this, StoryViewer.class);
                                 if(sp <= 120) {
                                     InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
                                 }                                startActivity(i);
@@ -201,6 +201,12 @@ public class Story2 extends ActionBarActivity {
                     }
                     editText1.setText("");
                 }
+
+            }
+        });
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });

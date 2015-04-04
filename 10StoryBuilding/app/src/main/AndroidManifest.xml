@@ -34,12 +34,16 @@
         <activity
             android:name=".Story3"
             android:label="@string/title_activity_story3"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" >
         </activity>
         <activity
             android:name=".StoryViewer"
             android:label="@string/title_activity_story_viewer"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".Test"
+            android:label="@string/title_activity_test" >
         </activity>
     </application>
 

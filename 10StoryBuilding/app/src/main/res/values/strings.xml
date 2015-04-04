@@ -10,5 +10,6 @@ Read the messages on these phones.  Solve the phrasal verbs and then solve the d
     </string>
     <string name="title_activity_story3">Story Three</string>
     <string name="title_activity_story_viewer">Stories</string>
+    <string name="title_activity_test">Test</string>
 
 </resources>

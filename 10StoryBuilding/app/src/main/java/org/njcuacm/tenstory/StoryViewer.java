@@ -125,8 +125,8 @@ public class StoryViewer extends ActionBarActivity {
                         /*viewGroup = (ViewGroup) lv.getChildAt(i);
                         viewGroup.setEnabled(false);
                         viewGroup.setClickable(false);*/
-                        lv.getAdapter().getView(i, null, lv).setEnabled(false);
-                        lv.getAdapter().getView(i, null, lv).setClickable(false);
+                        lv.getAdapter().getView(i, null, lv).setEnabled(true);
+                        lv.getAdapter().getView(i, null, lv).setClickable(true);
                         System.out.println("In IF");
                         /*lv.getChildAt(i).setEnabled(false);
                         lv.getChildAt(i).setClickable(false);*/
@@ -136,8 +136,8 @@ public class StoryViewer extends ActionBarActivity {
                         /*viewGroup = (ViewGroup) lv.getChildAt(i);
                         viewGroup.setEnabled(true);
                         viewGroup.setClickable(true);*/
-                        lv.getAdapter().getView(i, null, null).setEnabled(true);
-                        lv.getAdapter().getView(i, null, null).setClickable(true);
+                        lv.getAdapter().getView(i, null, null).setEnabled(false);
+                        lv.getAdapter().getView(i, null, null).setClickable(false);
                         System.out.println("In ELSE");
                         /*lv.getChildAt(i).setEnabled(true);
                         lv.getChildAt(i).setClickable(true);*/
