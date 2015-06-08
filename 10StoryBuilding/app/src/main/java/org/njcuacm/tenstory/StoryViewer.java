@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +32,7 @@ public class StoryViewer extends ActionBarActivity {
     public ListView lv;
     private ArrayList<String> storyList;
     private Scanner s;
-    private int sp = InputOutput.ReadInteger("stn/" + Story1.sys);
+    public int sp = InputOutput.ReadInteger("stn/" + Story1.sys);
     int p = 0;
 
     @Override
@@ -40,7 +41,7 @@ public class StoryViewer extends ActionBarActivity {
         setContentView(R.layout.story_viewer);
         setTitle("Stories \t\t\t\t\t POINTS: " + Integer.toString(sp));
         lv = (ListView) findViewById(R.id.storyViews);
-        File file = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/stn/" + Story1.stories);
+        File file = new File(InputOutput.getFileDirectory() + "stn/" + Story1.stories);
         if (!file.exists())
         {
             AlertDialog.Builder diag = new AlertDialog.Builder(StoryViewer.this);
@@ -182,5 +183,51 @@ public class StoryViewer extends ActionBarActivity {
                 break;
         }
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_story_viewer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.phrasal_verb_look:
+                doPhrasalVerbLook();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void doPhrasalVerbLook()
+    {
+        if(p <= 120)
+        {
+            AlertDialog.Builder diag = new AlertDialog.Builder(StoryViewer.this);
+            diag.setMessage("You must have more than 120 points to see the phrasal verbs.");
+            diag.setCancelable(false);
+            diag.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // TODO Auto-generated method stub
+
+                }
+            });
+
+            final AlertDialog dialog = diag.create();
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+        }
     }
 }

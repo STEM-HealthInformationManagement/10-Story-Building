@@ -1,6 +1,7 @@
 package org.njcuacm.tenstory;
 
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ public class InitViewer extends ActionBarActivity {
         setContentView(R.layout.init_viewer);
         final ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
         pb.setVisibility(View.INVISIBLE);
+        pb.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
         //Start a THREAD Handler after a 2 second delay
         Handler handler = new Handler();
         //Start the Spinner animation in 1.5 seconds.

@@ -53,7 +53,7 @@ public class TextAdapter extends ArrayAdapter<DisplayTextAdapter> {
             row = inflater.inflate(R.layout.story_list, parent, false);
         }
 
-        wrapper = (LinearLayout) row.findViewById(R.id.wrapper);
+        wrapper = (LinearLayout) row.findViewById(R.id.wrapper_dialog);
 
         DisplayTextAdapter textAdapter = getItem(position);
 
