@@ -3,37 +3,33 @@ package org.njcuacm.tenstory;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import org.njcuacm.adapters.TextAdapter;
-import org.njcuacm.net.FileDownloader;
+import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.filemanager.DownloadFilesManager;
 import org.njcuacm.net.NetConnector;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.FileHandler;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 
 
 public class Story1 extends ActionBarActivity {
@@ -43,12 +39,16 @@ public class Story1 extends ActionBarActivity {
     public static String stories = "strs.vpr";
     public static String sys = "sys.vpr";
     public static String st2_phrasal_verbs = "st2_phrasal_vbs.vpr";
+    public static String st_ch_str = "st_ch_str.vpr";
+    public static String sys_change = "sys_change.vpr";
     //The following are addresses that are being fetched from the njcuacm server.
-    private String fileAddress = "http://www.njcuacm.org/restricted/stem_test/app/10StoryBuilding/internal/stories/" + story1;
-    private String fileAddress1 = "http://www.njcuacm.org/restricted/stem_test/app/10StoryBuilding/internal/chs/" + ch1;
-    private String fileAddress2 = "http://www.njcuacm.org/restricted/stem_test/app/10StoryBuilding/internal/settings/" + stories;
-    private String fileAddress3 = "http://www.njcuacm.org/restricted/stem_test/app/10StoryBuilding/internal/settings/" + sys;
-    private String fileAddress4 = "http://www.njcuacm.org/restricted/stem_test/app/10StoryBuilding/internal/settings/" + st2_phrasal_verbs;
+    private String fileAddress = DownloadFilesManager.SERVER_ADDRESS + "stories/" + story1;
+    private String fileAddress1 = DownloadFilesManager.SERVER_ADDRESS + "chs/" + ch1;
+    private String fileAddress2 = DownloadFilesManager.SERVER_ADDRESS + "settings/" + stories;
+    private String fileAddress3 = DownloadFilesManager.SERVER_ADDRESS + "settings/" + sys;
+    private String fileAddress4 = DownloadFilesManager.SERVER_ADDRESS + "settings/" + st2_phrasal_verbs;
+    private String fileAddress5 = DownloadFilesManager.SERVER_ADDRESS + "settings/" + st_ch_str;
+    private String fileAddress6 = DownloadFilesManager.SERVER_ADDRESS + "settings/" + sys_change;
     //All our file retrieved will be saved here.
     private String destinationDirectory = "str";
     private String destinationDirectory1 = "ch";
@@ -59,6 +59,12 @@ public class Story1 extends ActionBarActivity {
     static Logger log;
     static FileWriter fw;
     static FileHandler f;
+
+    //Dat Download Manager
+    DownloadFilesManager downloadFilesManager;
+
+    ArrayList<String> settings = new ArrayList<String>();
+    ArrayList<String> currentSettings = new ArrayList<String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +85,15 @@ public class Story1 extends ActionBarActivity {
         waiter.animate();
         downloadText.setVisibility(View.INVISIBLE);
 
+        downloadFilesManager = new DownloadFilesManager();
         //Now we initialize FILE objects for checking them
-        final File file = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/str/" + story1);
-        final File file1 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/ch/" + ch1);
-        final File file2 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/stn/" + stories);
-        final File file3 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/stn/" + sys);
-        final File file4 = new File(Environment.getExternalStorageDirectory().toString() + "/tsb/internal/stn/" + st2_phrasal_verbs);
+        final File file = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/str/" + story1);
+        final File file1 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/ch/" + ch1);
+        final File file2 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/stn/" + stories);
+        final File file3 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/stn/" + sys);
+        final File file4 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/stn/" + st2_phrasal_verbs);
+        final File file5 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/stn/" + st_ch_str);
+        final File file6 = new File(DownloadFilesManager.DEVICE_EXTERNAL_STORAGE + "/tsb/internal/stn/" + sys_change);
         //Button click listener. This is where we check if all of our files exist as well as allow user to enter the StoryViewer Class.
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +144,8 @@ public class Story1 extends ActionBarActivity {
         {
             //If FILE 1 doesn't exist, download it and make sure we're connected to the internet
             if((!file.exists()) && NetConnector.isConnected(getApplicationContext())) {
-                //We won't need the ROUNDED PROGRESSBAR here.
+                downloadFilesManager.downloadFile(waiter, progressBar, downloadText, fileAddress, size, destinationDirectory, handler, true, sv, button);
+                /*//We won't need the ROUNDED PROGRESSBAR here.
                 waiter.setVisibility(View.INVISIBLE);
                 waiter.clearAnimation();
                 //We will need the HORIZONTAL PROGRESSBAR HERE, so set them to visible
@@ -143,14 +153,14 @@ public class Story1 extends ActionBarActivity {
                 downloadText.setVisibility(View.VISIBLE);
                 downloadText.setText("Downloading required resources...");
 
-                /**
+                *//**
                  * Now we want to make sure that we download our files using another thread,
                  * so that our MAIN thread is not interrupted by the download.
-                 */
+                 *//*
                 new Thread() {
-                    /**
+                    *//**
                      * This is a required method needed for the Thread class.
-                     * */
+                     * *//*
                     @Override
                     public void run() {
                         //We're going to retrieve our file size first so we can put the correct
@@ -159,7 +169,7 @@ public class Story1 extends ActionBarActivity {
                         System.out.println("File Size Retrieved is: " + pseudoFileSize);
                         //We're going to set the max of our progressbar to the file size retrieved.
                         progressBar.setMax(pseudoFileSize);
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Get the location of the LAST SLASH in out file address URL path
                         int slashIndex = fileAddress.lastIndexOf('/');
                         //Now get the last PERIOD location from the same URL
@@ -236,7 +246,7 @@ public class Story1 extends ActionBarActivity {
                             System.err.println("Error on Path or File Name.");
                         }
 
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Looper.prepare();
                         //Start the Spinner animation in 1.5 seconds.
                         //Execute the handler code to have the buttons show up. so the user can move on the to the story viewer.
@@ -253,7 +263,7 @@ public class Story1 extends ActionBarActivity {
                         super.run();
                     }
                     //NOW start the Thread BEFORE the code starts to run.
-                }.start();
+                }.start();*/
             }
             /**
              * SAME AS ABOVE IF STATEMENT.
@@ -262,7 +272,8 @@ public class Story1 extends ActionBarActivity {
              */
 
             if((!file1.exists()) && NetConnector.isConnected(getApplicationContext())) {
-                waiter.setVisibility(View.INVISIBLE);
+                downloadFilesManager.downloadFile(waiter, progressBar, downloadText, fileAddress1, size, destinationDirectory1, handler, true, sv, button);
+                /*waiter.setVisibility(View.INVISIBLE);
                 waiter.clearAnimation();
                 progressBar.setVisibility(View.VISIBLE);
                 downloadText.setVisibility(View.VISIBLE);
@@ -275,7 +286,7 @@ public class Story1 extends ActionBarActivity {
                         System.out.println("File Size Retrieved is: " + pseudoFileSize);
                         progressBar.setProgress(0);
                         progressBar.setMax(pseudoFileSize);
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         int slashIndex = fileAddress1.lastIndexOf('/');
                         int periodIndex = fileAddress1.lastIndexOf('.');
                         String fileName1 = fileAddress1.substring(slashIndex + 1);
@@ -329,7 +340,7 @@ public class Story1 extends ActionBarActivity {
                             System.err.println("Error on Path or File Name.");
                         }
 
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Looper.prepare();
                         //Start the Spinner animation in 1.5 seconds.
                         handler.postDelayed(new Runnable() {
@@ -343,10 +354,11 @@ public class Story1 extends ActionBarActivity {
                         }, 500);
                         super.run();
                     }
-                }.start();
+                }.start();*/
             }
             if((!file2.exists()) && NetConnector.isConnected(getApplicationContext())) {
-                waiter.setVisibility(View.INVISIBLE);
+                downloadFilesManager.downloadFile(waiter, progressBar, downloadText, fileAddress2, size, destinationDirectory2, handler, true, sv, button);
+                /*waiter.setVisibility(View.INVISIBLE);
                 waiter.clearAnimation();
                 progressBar.setVisibility(View.VISIBLE);
                 downloadText.setVisibility(View.VISIBLE);
@@ -360,7 +372,7 @@ public class Story1 extends ActionBarActivity {
                         System.out.println("File Size Retrieved is: " + pseudoFileSize);
                         progressBar.setProgress(0);
                         progressBar.setMax(pseudoFileSize);
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         int slashIndex = fileAddress2.lastIndexOf('/');
                         int periodIndex = fileAddress2.lastIndexOf('.');
                         String fileName2 = fileAddress2.substring(slashIndex + 1);
@@ -416,7 +428,7 @@ public class Story1 extends ActionBarActivity {
                             System.err.println("Error on Path or File Name.");
                         }
 
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Looper.prepare();
                         //Start the Spinner animation in 1.5 seconds.
                         handler.postDelayed(new Runnable() {
@@ -430,10 +442,11 @@ public class Story1 extends ActionBarActivity {
                         }, 500);
                         super.run();
                     }
-                }.start();
+                }.start();*/
             }
             if((!file3.exists()) && NetConnector.isConnected(getApplicationContext())) {
-                waiter.setVisibility(View.INVISIBLE);
+                downloadFilesManager.downloadFile(waiter, progressBar, downloadText, fileAddress3, size, destinationDirectory2, handler, true, sv, button);
+                /*waiter.setVisibility(View.INVISIBLE);
                 waiter.clearAnimation();
                 progressBar.setVisibility(View.VISIBLE);
                 downloadText.setVisibility(View.VISIBLE);
@@ -447,7 +460,7 @@ public class Story1 extends ActionBarActivity {
                         System.out.println("File Size Retrieved is: " + pseudoFileSize);
                         progressBar.setProgress(0);
                         progressBar.setMax(pseudoFileSize);
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         int slashIndex = fileAddress3.lastIndexOf('/');
                         int periodIndex = fileAddress3.lastIndexOf('.');
                         String fileName3 = fileAddress3.substring(slashIndex + 1);
@@ -503,7 +516,7 @@ public class Story1 extends ActionBarActivity {
                             System.err.println("Error on Path or File Name.");
                         }
 
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Looper.prepare();
                         //Start the Spinner animation in 1.5 seconds.
                         handler.postDelayed(new Runnable() {
@@ -517,10 +530,11 @@ public class Story1 extends ActionBarActivity {
                         }, 500);
                         super.run();
                     }
-                }.start();
+                }.start();*/
             }
             if((!file4.exists()) && NetConnector.isConnected(getApplicationContext())) {
-                waiter.setVisibility(View.INVISIBLE);
+                downloadFilesManager.downloadFile(waiter, progressBar, downloadText, fileAddress4, size, destinationDirectory2, handler, true, sv, button);
+                /*waiter.setVisibility(View.INVISIBLE);
                 waiter.clearAnimation();
                 progressBar.setVisibility(View.VISIBLE);
                 downloadText.setVisibility(View.VISIBLE);
@@ -532,7 +546,7 @@ public class Story1 extends ActionBarActivity {
                         int pseudoFileSize = FileDownloader.getOnlineFileSize(fileAddress4);
                         System.out.println("File Size Retrieved is: " + pseudoFileSize);
                         progressBar.setMax(pseudoFileSize);
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         int slashIndex = fileAddress4.lastIndexOf('/');
                         int periodIndex = fileAddress4.lastIndexOf('.');
                         String fileName4 = fileAddress4.substring(slashIndex + 1);
@@ -586,7 +600,7 @@ public class Story1 extends ActionBarActivity {
                             System.err.println("Error on Path or File Name.");
                         }
 
-                        /******************************************************************************/
+                        *//******************************************************************************//*
                         //Looper.prepare();
                         //Start the Spinner animation in 1.5 seconds.
                         handler.postDelayed(new Runnable() {
@@ -600,32 +614,108 @@ public class Story1 extends ActionBarActivity {
                         }, 500);
                         super.run();
                     }
-                }.start();
+                }.start();*/
             }
-            //If all of these files exist and we are also connected to the internet,
-            //we then let the user move on to the StoryViewer class by enabling the buttons.
-            if(file.exists() &&
-                    file1.exists() &&
-                    file2.exists() &&
-                    file3.exists() &&
-                    file4.exists() &&
-                    NetConnector.isConnected(getApplicationContext()))
-            {
-                sv.setVisibility(View.VISIBLE);
-                button.setVisibility(View.VISIBLE);
-                waiter.setVisibility(View.INVISIBLE);
-                waiter.clearAnimation();
-                downloadText.setVisibility(View.INVISIBLE);
+            if((!file5.exists()) && NetConnector.isConnected(getApplicationContext())) {
+                downloadFilesManager.downloadFile(waiter,
+                        progressBar,
+                        downloadText,
+                        fileAddress5,
+                        size,
+                        destinationDirectory2,
+                        handler,
+                        true,
+                        sv,
+                        button);
             }
-            //Else we show a dialog to the user.
-            else
-            {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
-                alert.setMessage("Error retrieving resources.\n" +
-                        "Please check your internet connection and try again.");
+            if((!file6.exists()) && NetConnector.isConnected(getApplicationContext())) {
+                downloadFilesManager.downloadFile(waiter,
+                        progressBar,
+                        downloadText,
+                        fileAddress6,
+                        size,
+                        destinationDirectory2,
+                        handler,
+                        true,
+                        sv,
+                        button);
             }
-        }
 
+        }
+//If all of these files exist and we are also connected to the internet,
+        //we then let the user move on to the StoryViewer class by enabling the buttons.
+        if(file.exists() &&
+                file1.exists() &&
+                file2.exists() &&
+                file3.exists() &&
+                file4.exists() &&
+                file5.exists() &&
+                file6.exists() &&
+                NetConnector.isConnected(getApplicationContext()))
+        {
+
+            //Read the Settings File to check the VERWIONS.
+            Scanner scanner;
+            String crs;
+            try {
+                scanner = new Scanner(file5);
+                while ((crs = scanner.nextLine()) != null)
+                {
+                    String[] split = crs.split("=");
+                    currentSettings.add(split[1]);
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            URL url = null;
+            BufferedReader bufferedReader = null;
+            String s;
+
+            try {
+                url = new URL(DownloadFilesManager.SERVER_ADDRESS + "settings/" + st_ch_str);
+                while ((s = bufferedReader.readLine()) != null)
+                {
+                    String[] splitted = s.split("=");
+                    settings.add(splitted[1]);
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                final DialogAdapter dialogAdapter = new DialogAdapter();
+                dialogAdapter.dialogOut(Story1.this, "Error check for updates", true, false, true, "OK", null, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogAdapter.dialogOutDialog.dismiss();
+                    }
+                }, null);
+            }
+            finally {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (!settings.isEmpty())
+            {
+
+            }
+
+            sv.setVisibility(View.VISIBLE);
+            button.setVisibility(View.VISIBLE);
+            waiter.setVisibility(View.INVISIBLE);
+            waiter.clearAnimation();
+            downloadText.setVisibility(View.INVISIBLE);
+        }
+        //Else we show a dialog to the user.
+        else
+        {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getApplicationContext());
+            alert.setMessage("Error retrieving resources.\n" +
+                    "Please check your internet connection and try again.");
+        }
         /*else
         {
             *//*if(!NetConnector.isConnected(getApplicationContext()))
