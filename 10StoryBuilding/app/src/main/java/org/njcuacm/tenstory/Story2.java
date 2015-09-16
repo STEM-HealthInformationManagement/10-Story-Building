@@ -140,7 +140,7 @@ public class Story2 extends ActionBarActivity {
                         adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
 
                         scrollListView();
-                        if (editText1.getText().toString().toLowerCase().equals("no")) {
+                        if (editText1.getText().toString().toLowerCase().equals("no") || editText1.getText().toString().toLowerCase().equals("yes")) {
                             AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
                             diag.setMessage("Congratulations! You've finished Story One!\n\n" +
                                     "You have now unlocked Story Two!");
@@ -182,6 +182,7 @@ public class Story2 extends ActionBarActivity {
                 scrollListView();
             }
         });
+        editText1.setHint(R.string.answer_placeholder);
 
         SEND.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -132,7 +132,7 @@ public class FileDownloader {
 
     public static int getOnlineFileSize(final String fileURL) {
         final int[] result = {0};
-        Thread thread = new Thread(){
+       /* Thread thread = new Thread(){
             @Override
             public void run() {
                 HttpURLConnection conn = null;
@@ -157,6 +157,20 @@ public class FileDownloader {
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
+        }*/
+        HttpURLConnection conn = null;
+        try {
+            URL url = new URL(fileURL);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.getInputStream();
+            result[0] = conn.getContentLength();
+        } catch (IOException e) {
+            result[0] =  -1;
+        } finally {
+            if (conn != null) {
+                conn.disconnect();
+            }
         }
         return result[0];
     }
