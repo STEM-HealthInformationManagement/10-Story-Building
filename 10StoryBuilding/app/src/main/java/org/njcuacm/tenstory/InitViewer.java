@@ -1,39 +1,56 @@
 package org.njcuacm.tenstory;
 
+import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
+import org.njcuacm.net.NetConnector;
 
 
 public class InitViewer extends ActionBarActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.init_viewer);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_init_viewer, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        final ProgressBar pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
+        pb.getIndeterminateDrawable().setColorFilter(0xFFFFFFFF, PorterDuff.Mode.SRC_ATOP);
+        //Start a THREAD Handler after a 2 second delay
+        Handler handler = new Handler();
+        //Start the Spinner animation in 1.5 seconds.
+        handler.postDelayed(new Runnable() {
+            //Run the thread
+            public void run() {
+                pb.setVisibility(View.VISIBLE);
+                pb.animate();
+            }
+        }, 1500);
+        //Start checking for internet connection after 3 seconds.
+        handler.postDelayed(new Runnable() {
+            //Run the thread
+            public void run() {
+                if(NetConnector.isNetworkAvailable(InitViewer.this))
+                {
+                    Intent i = new Intent(InitViewer.this, Story1.class);
+                    i.putExtra("netStat", "true");
+                    startActivity(i);
+                    finish();
+                }
+                else
+                {
+                    Intent i = new Intent(InitViewer.this, Story1.class);
+                    i.putExtra("netStat", "false");
+                    startActivity(i);
+                    finish();
+                }
+            }
+        }, 3000);
     }
 }
