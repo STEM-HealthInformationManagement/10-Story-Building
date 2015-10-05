@@ -15,5 +15,11 @@ Read the messages on these phones.  Solve the phrasal verbs and then solve the d
     <string name="title_activity_story4">Tom Is Missing</string>
     <string name="answer_placeholder">Tap Here to Answer</string>
     <string name="title_activity_story5">Medical Affair</string>
+    <string name="title_activity_story6">Dangerous Work</string>
+    <string name="title_activity_story7">Story Six - Warning to Kristen</string>
+    <string name="title_activity_story8">Story Seven - Stolen</string>
+    <string name="title_activity_story9">Story Eight - Parents\' Worries</string>
+    <string name="title_activity_story10">Story Nine - Confused about Gay Marriage</string>
+    <string name="title_activity_story11">Story Ten - Fear Loves Company</string>
 
 </resources>

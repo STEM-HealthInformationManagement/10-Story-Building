@@ -17,12 +17,10 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import org.njcuacm.adapters.DialogAdapter;
-import org.njcuacm.adapters.DisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
-import org.njcuacm.adapters.TextAdapter;
 
-public class Story4 extends ActionBarActivity {
+public class Story6 extends ActionBarActivity {
 
     private SelectiveTextAdapter adapter;
     public ListView lv;
@@ -30,6 +28,8 @@ public class Story4 extends ActionBarActivity {
     boolean questionTwoAnswered = false;
     boolean questionThreeAnswered = false;
     boolean questionFourAnswered = false;
+    boolean questionFiveAnswered = false;
+    boolean questionSixAnswered = false;
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
@@ -37,18 +37,18 @@ public class Story4 extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.story4);
+        setContentView(R.layout.story6);
         //Rename our title on the ActionBar and have the score show up as well.
-        setTitle("Story Two - Tommy is Missing");
+        setTitle("Story Five - Dangerous Work");
         //Get our action bar on the top and set it to show up as a Back Button Arrow ( <- )
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        lv = (ListView) findViewById(R.id.listView);
+        lv = (ListView) findViewById(R.id.listView3);
         //We're going to set our TextAdapter to use the `story_list` Layout.
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
         showConversation();
-        button = (Button) findViewById(R.id.showQuestionButton);
+        button = (Button) findViewById(R.id.questionButton);
         button.setEnabled(false);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,47 +66,51 @@ public class Story4 extends ActionBarActivity {
         }, null);
 
         dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY TWO\nTommy is Missing", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter.dialogOut(this, "STORY FIVE\nDangerous Work", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogAdapter.dialogOutDialog.dismiss();
             }
         }, null);
 
+
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position)
-                {
-                    case 2:
-                        if(!questionOneAnswered) {
+                switch (position) {
+                    case 4:
+                        if (!questionOneAnswered) {
                             // Set an EditText view to get user input
                             //final EditText getChoice = new EditText(Story2.this);
                             //getChoice.setPadding(10, 0, 10, 0);
 
                             //Over here, we'll create a RadioGroup, which will be
                             //A view for our Dialog Box.
-                            final RadioGroup group = new RadioGroup(Story4.this);
+                            final RadioGroup group = new RadioGroup(Story6.this);
                             //We will have three radio buttons. Each radio button will contain a choice
-                            final RadioButton rb1 = new RadioButton(Story4.this);
-                            final RadioButton rb2 = new RadioButton(Story4.this);
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
                             //Set the radio text of the choices.
-                            rb1.setText("succeed at");
-                            rb2.setText("succeed on");
+                            rb1.setText("bored with");
+                            rb2.setText("bored in");
+                            rb3.setText("bored on");
                             //Now we add the radio buttons to the view (Radio Group)
                             group.addView(rb1);
                             group.addView(rb2);
+                            group.addView(rb3);
                             //Change the view's gravity.
                             group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
                             //Set the gravity of the radio buttons to be in the middle.
                             rb1.setGravity(Gravity.FILL_HORIZONTAL);
                             rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
                             //Initialize the dialog
-                            AlertDialog.Builder diag = new AlertDialog.Builder(Story4.this);
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
                             //Set the RadioGroup to the dialog's view.
                             diag.setView(group);
                             //We now show the message and the speaker in the dialog.
-                            diag.setMessage("Johnny" + ": " + "...We’ll never succeed __________ being a band if he goes missing ..." + "\n\nCHOICES: ");
+                            diag.setMessage("Marc" + ": " + "...You got __________ going straight?..." + "\n\nCHOICES: ");
                             //Make sure the user cannot cancel the Dialog until the user answers it.
                             diag.setCancelable(false);
                             diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
@@ -131,8 +135,7 @@ public class Story4 extends ActionBarActivity {
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
                                     co++;*/
-                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered)
-                                        {
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
                                             button.setEnabled(true);
                                         }
                                         dialog.dismiss();
@@ -147,35 +150,39 @@ public class Story4 extends ActionBarActivity {
                             });
                         }
                         break;
-                    case 3:
-                        if(!questionTwoAnswered) {
+                    case 5:
+                        if (!questionTwoAnswered) {
                             // Set an EditText view to get user input
                             //final EditText getChoice = new EditText(Story2.this);
                             //getChoice.setPadding(10, 0, 10, 0);
 
                             //Over here, we'll create a RadioGroup, which will be
                             //A view for our Dialog Box.
-                            final RadioGroup group = new RadioGroup(Story4.this);
+                            final RadioGroup group = new RadioGroup(Story6.this);
                             //We will have three radio buttons. Each radio button will contain a choice
-                            final RadioButton rb1 = new RadioButton(Story4.this);
-                            final RadioButton rb2 = new RadioButton(Story4.this);
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
                             //Set the radio text of the choices.
-                            rb1.setText("related with");
-                            rb2.setText("related to");
+                            rb1.setText("interested in");
+                            rb2.setText("interested with");
+                            rb3.setText("interested to");
                             //Now we add the radio buttons to the view (Radio Group)
                             group.addView(rb1);
                             group.addView(rb2);
+                            group.addView(rb3);
                             //Change the view's gravity.
                             group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
                             //Set the gravity of the radio buttons to be in the middle.
                             rb1.setGravity(Gravity.FILL_HORIZONTAL);
                             rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
                             //Initialize the dialog
-                            AlertDialog.Builder diag = new AlertDialog.Builder(Story4.this);
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
                             //Set the RadioGroup to the dialog's view.
                             diag.setView(group);
                             //We now show the message and the speaker in the dialog.
-                            diag.setMessage("Duane" + ": " + "...His disappearance had better not be related __________ drugs...." + "\n\nCHOICES: ");
+                            diag.setMessage("John" + ": " + "...I’m __________ your friend’s offer—to drive that truck..." + "\n\nCHOICES: ");
                             //Make sure the user cannot cancel the Dialog until the user answers it.
                             diag.setCancelable(false);
                             diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
@@ -193,15 +200,14 @@ public class Story4 extends ActionBarActivity {
                                 @Override
                                 public void onClick(View v) {
                                     //The radio button number 3 is our answer, so check if the user chose it.
-                                    if (rb2.isChecked()) {
+                                    if (rb1.isChecked()) {
                                         questionTwoAnswered = true;
                                         Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
                                     /*sp += 10;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
                                     co++;*/
-                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered)
-                                        {
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
                                             button.setEnabled(true);
                                         }
                                         dialog.dismiss();
@@ -216,36 +222,40 @@ public class Story4 extends ActionBarActivity {
                             });
                         }
                         break;
-                    case 4:
+                    case 7:
 
-                        if(!questionThreeAnswered) {
+                        if (!questionThreeAnswered) {
                             // Set an EditText view to get user input
                             //final EditText getChoice = new EditText(Story2.this);
                             //getChoice.setPadding(10, 0, 10, 0);
 
                             //Over here, we'll create a RadioGroup, which will be
                             //A view for our Dialog Box.
-                            final RadioGroup group = new RadioGroup(Story4.this);
+                            final RadioGroup group = new RadioGroup(Story6.this);
                             //We will have three radio buttons. Each radio button will contain a choice
-                            final RadioButton rb1 = new RadioButton(Story4.this);
-                            final RadioButton rb2 = new RadioButton(Story4.this);
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
                             //Set the radio text of the choices.
-                            rb1.setText("look into");
-                            rb2.setText("look at");
+                            rb1.setText("frightened of");
+                            rb2.setText("frightened in");
+                            rb3.setText("frightened on");
                             //Now we add the radio buttons to the view (Radio Group)
                             group.addView(rb1);
                             group.addView(rb2);
+                            group.addView(rb3);
                             //Change the view's gravity.
                             group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
                             //Set the gravity of the radio buttons to be in the middle.
                             rb1.setGravity(Gravity.FILL_HORIZONTAL);
                             rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
                             //Initialize the dialog
-                            AlertDialog.Builder diag = new AlertDialog.Builder(Story4.this);
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
                             //Set the RadioGroup to the dialog's view.
                             diag.setView(group);
                             //We now show the message and the speaker in the dialog.
-                            diag.setMessage("Johnny" + ": " + "Can you visit his house and look _______ it?...." + "\n\nCHOICES: ");
+                            diag.setMessage("John" + ": " + "...I’m more __________ losing our apartment than losing my freedom..." + "\n\nCHOICES: ");
                             //Make sure the user cannot cancel the Dialog until the user answers it.
                             diag.setCancelable(false);
                             diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
@@ -270,8 +280,7 @@ public class Story4 extends ActionBarActivity {
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
                                     co++;*/
-                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered)
-                                        {
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
                                             button.setEnabled(true);
                                         }
                                         dialog.dismiss();
@@ -287,36 +296,40 @@ public class Story4 extends ActionBarActivity {
                         }
 
                         break;
-                    case 5:
+                    case 8:
 
-                        if(!questionFourAnswered) {
+                        if (!questionFourAnswered) {
                             // Set an EditText view to get user input
                             //final EditText getChoice = new EditText(Story2.this);
                             //getChoice.setPadding(10, 0, 10, 0);
 
                             //Over here, we'll create a RadioGroup, which will be
                             //A view for our Dialog Box.
-                            final RadioGroup group = new RadioGroup(Story4.this);
+                            final RadioGroup group = new RadioGroup(Story6.this);
                             //We will have three radio buttons. Each radio button will contain a choice
-                            final RadioButton rb1 = new RadioButton(Story4.this);
-                            final RadioButton rb2 = new RadioButton(Story4.this);
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
                             //Set the radio text of the choices.
-                            rb1.setText("guilty with");
-                            rb2.setText("guilty of");
+                            rb1.setText("jealous on");
+                            rb2.setText("jealous of");
+                            rb3.setText("jealous to");
                             //Now we add the radio buttons to the view (Radio Group)
                             group.addView(rb1);
                             group.addView(rb2);
+                            group.addView(rb3);
                             //Change the view's gravity.
                             group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
                             //Set the gravity of the radio buttons to be in the middle.
                             rb1.setGravity(Gravity.FILL_HORIZONTAL);
                             rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
                             //Initialize the dialog
-                            AlertDialog.Builder diag = new AlertDialog.Builder(Story4.this);
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
                             //Set the RadioGroup to the dialog's view.
                             diag.setView(group);
                             //We now show the message and the speaker in the dialog.
-                            diag.setMessage("Duane" + ": " + "...I don’t want his parents to think I’m guilty __________ getting him the drugs...." + "\n\nCHOICES: ");
+                            diag.setMessage("Marc" + ": " + "...I’m a little __________ you...." + "\n\nCHOICES: ");
                             //Make sure the user cannot cancel the Dialog until the user answers it.
                             diag.setCancelable(false);
                             diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
@@ -341,8 +354,7 @@ public class Story4 extends ActionBarActivity {
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
                                     co++;*/
-                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered)
-                                        {
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
                                             button.setEnabled(true);
                                         }
                                         dialog.dismiss();
@@ -358,46 +370,225 @@ public class Story4 extends ActionBarActivity {
                         }
 
                         break;
+
+                    case 9:
+
+                        if (!questionFiveAnswered) {
+                            // Set an EditText view to get user input
+                            //final EditText getChoice = new EditText(Story2.this);
+                            //getChoice.setPadding(10, 0, 10, 0);
+
+                            //Over here, we'll create a RadioGroup, which will be
+                            //A view for our Dialog Box.
+                            final RadioGroup group = new RadioGroup(Story6.this);
+                            //We will have three radio buttons. Each radio button will contain a choice
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
+                            //Set the radio text of the choices.
+                            rb1.setText("excited about");
+                            rb2.setText("excited on");
+                            rb3.setText("excited with");
+                            //Now we add the radio buttons to the view (Radio Group)
+                            group.addView(rb1);
+                            group.addView(rb2);
+                            group.addView(rb3);
+                            //Change the view's gravity.
+                            group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+                            //Set the gravity of the radio buttons to be in the middle.
+                            rb1.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
+                            //Initialize the dialog
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
+                            //Set the RadioGroup to the dialog's view.
+                            diag.setView(group);
+                            //We now show the message and the speaker in the dialog.
+                            diag.setMessage("John (To MARIA)" + ": " + "...I’m __________ this opportunity...." + "\n\nCHOICES: ");
+                            //Make sure the user cannot cancel the Dialog until the user answers it.
+                            diag.setCancelable(false);
+                            diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
+                            final AlertDialog dialog = diag.create();
+                            dialog.show();
+                            //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //The radio button number 3 is our answer, so check if the user chose it.
+                                    if (rb1.isChecked()) {
+                                        questionFiveAnswered = true;
+                                        Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                    /*sp += 10;
+                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                    cont = 1;
+                                    co++;*/
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
+                                            button.setEnabled(true);
+                                        }
+                                        dialog.dismiss();
+                                    } else {
+                                        //The dialog should stay open here...
+                                        Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                    /*sp -= 15;
+                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                    cont = 0;*/
+                                    }
+                                }
+                            });
+                        }
+
+                        break;
+
+                    case 10:
+
+                        if (!questionSixAnswered) {
+                            // Set an EditText view to get user input
+                            //final EditText getChoice = new EditText(Story2.this);
+                            //getChoice.setPadding(10, 0, 10, 0);
+
+                            //Over here, we'll create a RadioGroup, which will be
+                            //A view for our Dialog Box.
+                            final RadioGroup group = new RadioGroup(Story6.this);
+                            //We will have three radio buttons. Each radio button will contain a choice
+                            final RadioButton rb1 = new RadioButton(Story6.this);
+                            final RadioButton rb2 = new RadioButton(Story6.this);
+                            final RadioButton rb3 = new RadioButton(Story6.this);
+                            //Set the radio text of the choices.
+                            rb1.setText("friendly with");
+                            rb2.setText("friendly in");
+                            rb3.setText("friendly to");
+                            //Now we add the radio buttons to the view (Radio Group)
+                            group.addView(rb1);
+                            group.addView(rb2);
+                            group.addView(rb3);
+                            //Change the view's gravity.
+                            group.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
+                            //Set the gravity of the radio buttons to be in the middle.
+                            rb1.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb2.setGravity(Gravity.FILL_HORIZONTAL);
+                            rb3.setGravity(Gravity.FILL_HORIZONTAL);
+                            //Initialize the dialog
+                            AlertDialog.Builder diag = new AlertDialog.Builder(Story6.this);
+                            //Set the RadioGroup to the dialog's view.
+                            diag.setView(group);
+                            //We now show the message and the speaker in the dialog.
+                            diag.setMessage("Maria" + ": " + "...what a good man you are…and you are even getting __________ the boss..." + "\n\nCHOICES: ");
+                            //Make sure the user cannot cancel the Dialog until the user answers it.
+                            diag.setCancelable(false);
+                            diag.setPositiveButton("CHECK", new DialogInterface.OnClickListener() {
+
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO Auto-generated method stub
+
+                                }
+                            });
+                            final AlertDialog dialog = diag.create();
+                            dialog.show();
+                            //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //The radio button number 3 is our answer, so check if the user chose it.
+                                    if (rb1.isChecked()) {
+                                        questionSixAnswered = true;
+                                        Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
+                                    /*sp += 10;
+                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                    cont = 1;
+                                    co++;*/
+                                        if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered && questionFourAnswered && questionFiveAnswered && questionSixAnswered) {
+                                            button.setEnabled(true);
+                                        }
+                                        dialog.dismiss();
+                                    } else {
+                                        //The dialog should stay open here...
+                                        Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
+                                    /*sp -= 15;
+                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                    cont = 0;*/
+                                    }
+                                }
+                            });
+                        }
+
+                        break;
+
                     default:
                         break;
                 }
             }
         });
 
+
+
+
     }
 
     private void showConversation()
     {
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Tommy, did you turn off your cell phone?  " +
-                        "You are not answering my texts?  " +
-                        "Everyone is looking for you.  " +
-                        "We want to know what’s happening to you.", "Duane", 0));
+                "=========================================.", "EMAIL", 0));
 
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "...", "(NO REPLY)", 0));
+                "Dear Mr. Jennings,\n\n" +
+                        "We regret to inform you that we cannot continue to employ you at Northside Cleaning and Maintenance  Company.  The new company policy is that we do not employ workers who were previously convicted of felony crimes.   Your employment will be terminated based on your 1998 conviction of armed robbery.\n\n" +
+                        "We are attaching the section of our company policy that is relevant to this situation.  If you have any questions, please read the policy.\n\n" +
+                        "Your last day of work will be today.\n\n" +
+                        "Sincerely,\n" +
+                        "Max Maralas\n" +
+                        "Director of Operations \n", "", 0));
 
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Hey Duane I’m fed up with Tommy.   " +
-                        "We’ll never succeed __________ being a band if he " +
-                        "goes missing for days and makes us cancel shows.", "Johnny", R.color.grey2));
+                "=========================================", "TEXT MESSAGES", 0));
 
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I feel the same way.  His disappearance had better not be related __________  drugs.  " +
-                        "He can’t handle that stuff.    " +
-                        "He needs someone to look over him 24/7.  " +
-                        "One mistake and he’s lost.", "Duane", R.color.grey2));
+                "Marc, I’m finished with the cleaning job.  I need some work... the kind that pays a lot. ", "John", 0));
 
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Can you visit his house and look __________ it?  " +
-                        "I don’t know what’s happened to him.  " +
-                        "If it is drugs, he’s capable of anything—running away, stealing…anything.  " +
-                        "This could be similar to the time he stole his brother’s car last year.", "Johnny", R.color.grey2));
+                "What happened?  You got __________ going straight?  Not enough excitement?  ", "Marc", R.color.grey2));
 
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I’m a little frightened to go.  " +
-                        "I don’t want his parents to think I’m guilty __________ getting him the drugs.  " +
-                        "They hate me already because they don’t approve of the band. ", "Duane", R.color.grey2));
+                "Something like that.  " +
+                        "I’m __________ your friend’s offer—to drive that truck on that special job.  " +
+                        "Can we talk about it?", "John", R.color.grey2));
+
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "You should forget about it.  " +
+                        "You have a wife now…and kids.  " +
+                        "They need a dad who isn’t in jail.  " +
+                        "You said you were finished with the life of crime.", "Marc", 0));
+
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "They need food on the table.  " +
+                        "I’m more __________ losing our apartment than losing my freedom. ", "John", R.color.grey2));
+
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "OK.  " +
+                        "I’m a little __________ you.  " +
+                        "You have a family to think about.  " +
+                        "I’m just into this because I like the excitement and I don't like hard work.  " +
+                        "Let me look up my friend’s number and get back to you—the job is tonight.", "Marc", R.color.grey2));
+
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "Honey, Mr. Morales took me to lunch and told me he has a new maintenance job for me—" +
+                        "I’ll have to stay overnight to do it, but it should more money in overtime and maybe a promotion.  " +
+                        "I’m __________ this opportunity.   " +
+                        "I won’t be home tonight.  Wish me luck.", "John (To MARIA)", R.color.grey2));
+
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "I knew this job at Northside would be good for you.  " +
+                        "I’m so proud of you.  " +
+                        "You are showing them what a good man you are…and you are even getting __________ the boss!   " +
+                        "I love you. ", "John", R.color.grey2));
+
     }
 
     private void showResultingQuestion()
@@ -408,10 +599,10 @@ public class Story4 extends ActionBarActivity {
 
         //Over here, we'll create a RadioGroup, which will be
         //A view for our Dialog Box.
-        final RadioGroup group3 = new RadioGroup(Story4.this);
+        final RadioGroup group3 = new RadioGroup(Story6.this);
         //We will have three radio buttons. Each radio button will contain a choice
-        final RadioButton rb10 = new RadioButton(Story4.this);
-        final RadioButton rb11 = new RadioButton(Story4.this);
+        final RadioButton rb10 = new RadioButton(Story6.this);
+        final RadioButton rb11 = new RadioButton(Story6.this);
         //Set the radio text of the choices.
         rb10.setText("Yes");
         rb11.setText("No");
@@ -424,11 +615,11 @@ public class Story4 extends ActionBarActivity {
         rb10.setGravity(Gravity.FILL_HORIZONTAL);
         rb11.setGravity(Gravity.FILL_HORIZONTAL);
         //Initialize the dialog
-        AlertDialog.Builder diag3 = new AlertDialog.Builder(Story4.this);
+        AlertDialog.Builder diag3 = new AlertDialog.Builder(Story6.this);
         //Set the RadioGroup to the dialog's view.
         diag3.setView(group3);
         //We now show the message and the speaker in the dialog.
-        diag3.setMessage("Did anything bad happen to Tommy?");
+        diag3.setMessage("Should John go back to a life of crime? ");
         //Make sure the user cannot cancel the Dialog until the user answers it.
         diag3.setCancelable(false);
         diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
@@ -451,12 +642,12 @@ public class Story4 extends ActionBarActivity {
                     resultingAnswer = rb10.getText().toString();
 
                     dialog3.dismiss();
-                    intent = new Intent(Story4.this, StoryViewer.class);
+                    intent = new Intent(Story6.this, StoryViewer.class);
                     startActivity(intent);
                 } else if (rb11.isChecked()) {
                     resultingAnswer = rb11.getText().toString();
                     dialog3.dismiss();
-                    intent = new Intent(Story4.this, StoryViewer.class);
+                    intent = new Intent(Story6.this, StoryViewer.class);
                     startActivity(intent);
                 }
             }

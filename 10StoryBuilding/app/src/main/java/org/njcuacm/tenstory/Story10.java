@@ -3,10 +3,9 @@ package org.njcuacm.tenstory;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +17,16 @@ import org.njcuacm.adapters.DialogAdapter;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
 
-public class Story5 extends ActionBarActivity {
+public class Story10 extends ActionBarActivity {
 
     private SelectiveTextAdapter adapter;
     public ListView lv;
+    boolean questionOneAnswered = false;
+    boolean questionTwoAnswered = false;
+    boolean questionThreeAnswered = false;
+    boolean questionFourAnswered = false;
+    boolean questionFiveAnswered = false;
+    boolean questionSixAnswered = false;
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
@@ -29,26 +34,28 @@ public class Story5 extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.story5);
-        //Rename our title on the ActionBar and have the score show up as well.
-        setTitle("Story Four - Medical Affair");
+        setContentView(R.layout.story10);//Rename our title on the ActionBar and have the score show up as well.
+        setTitle("Story Nine - Confused about gay marriage");
         //Get our action bar on the top and set it to show up as a Back Button Arrow ( <- )
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        lv = (ListView) findViewById(R.id.listView2);
+        lv = (ListView) findViewById(R.id.listView7);
         //We're going to set our TextAdapter to use the `story_list` Layout.
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
         showConversation();
-        button = (Button) findViewById(R.id.showQuestionButton);
+        button = (Button) findViewById(R.id.questionButton);
+        button.setEnabled(true);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showResultingQuestion();
             }
         });
+
+
         dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY FOUR\nMedical Affair", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter.dialogOut(this, "STORY NINE\nConfused about gay marriage", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogAdapter.dialogOutDialog.dismiss();
@@ -59,54 +66,22 @@ public class Story5 extends ActionBarActivity {
     private void showConversation()
     {
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "To: Dr. Coning\n" +
-                        "From: Kristen Santos\n" +
-                        "RE: Thank you\n" +
-                        "\n" +
-                        "Dear Dr. Coning\n" +
-                        "\n" +
-                        "I just want to send you a ‘thank-you’ for the way you treated my daughter in the emergency room.  She is usually so frightened of doctors and hospitals.  You made the experience fun, for her and me.  \n" +
+                "====================", "EMAIL", R.color.bg_drawer_blue_active));
+        adapter.add(new SelectiveDisplayTextAdapter(false,
+                "I have been going to church all of my life and I believe ________ God and the Church’s teachings.   But now, I need your advice.  I’m sick of worrying about this problem.   I just got ______ from a long talk with a good friend.   She’s a person I’m really fond ______, and I trust her opinion a lot.   She wants me to go to a gay wedding reception.   At first I told her to forget _________ it. I didn’t even wait for her to give me the details.  I told her ‘no’ immediately.  I’m not exactly known _____being open minded to that stuff.   I was surprised at her reaction—she doesn’t want to see me if I have that attitude.  \n\n" +
+                        "But now I’m wondering if I’m wrong.  I have been exposed to gay people—my cousin is gay and that dude from that TV show I like.  I don’t have a problem with them.  I’m just accustomed to marriage happening between a man and a woman—not two dudes.   If I think about it, I guess it depends on the people who are getting married.  Do they really love each other?  I know what the church says about this—it’s wrong.  But, I’m curious about your personal opinion—what should I do?    If I go to this wedding party, can I still be a member of your church or do I have to hand in my Rosary Beads, lol.  Just kidding.  It’s just all very confusing to me.  \n\n" +
+                        "Please, whatever you do—don’t tell my dad that I’m asking about this.\n\n\n" +
                         "Sincerely,\n" +
-                        "Kristen\n", "Email Message:", 0));
-
+                        "Trevor\n", "To: Father Ward\n" +
+                "From Trevor Adams\n" +
+                "RE:  My Faith\n" +
+                "Dear Father Ward,\n", 0));
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Kristen,\n" +
-                        "It was my pleasure.  She’s a wonderful girl and you’re a wonderful mom, and woman.  Please bring her by for a follow up visit.   Text me when you can come.  If I’m not busy with an emergency, maybe we can have lunch.\n" +
-                        "Ray.\n", "Reply:", 0));
-
+                "\n\n\n\n", "", R.color.bg_drawer_blue_active));
         adapter.add(new SelectiveDisplayTextAdapter(false,
-                "=====================================", "Text", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Ray, My daughter is doing great, so no need for a visit.  I’m still interested in lunch.  Are you free today?", "Kristen", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Sure, come by the hospital at 1pm.   " +
-                        "There’s a new Brazilian Restaurant that I’ve been excited about trying.  " +
-                        "It’s a little far, but I’m bored with all of the restaurants close to the hospital. " +
-                        "Do you like Brazilian food?", "Ray", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Love it.", "Kristin", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Thank you so much for lunch today.   " +
-                        "I was not disappointed with the food....or the company.  " +
-                        "Do you get this friendly with all of your patients or am I just lucky?", "Kristin", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "To Kristin,\n" +
-                        "I had a very good time at lunch...too good.   You should know that I am married to a wonderful woman, and I have four beautiful daughters.   I had no right to ask you to lunch, but you fascinated me so much.   Now that you know I have a wife, would you still agree with another lunch date with me?\n" +
-                        "Sincerely,\n" +
-                        "Ray\n.", "Email", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Ray,\n" +
-                        "I suspected that.  You should know that I’m a single mom, and I am responsible for working to support my two kids.  I’m also the cook, cleaner, therapist, taxi driver, coach, mother and father to them.  \n" +
-                        "I would love to see you again.   I haven’t had such a great time with a man in years...we really connect.  Funny, I am actually jealous of your wife—she has you.  You’re handsome, kind, charming…but you are hers!\n" +
-                        "I don’t know if I want to connected to you socially or emotionally or.... \n" +
-                        "My head is spinning!\n" +
-                        "Kristin\n", "Email", 0));
+                "Trevor,\n\n" +
+                        "I read your message below.  You don’t have to hand in your Rosary Beads.  I actually know the couple and will be attending that same reception as a guest.   I will see you there…if you decide to come. \n\n\n" +
+                        "Fr. Ward\n", "Re: Re: My Faith", 0));
     }
 
     private void showResultingQuestion()
@@ -117,10 +92,10 @@ public class Story5 extends ActionBarActivity {
 
         //Over here, we'll create a RadioGroup, which will be
         //A view for our Dialog Box.
-        final RadioGroup group3 = new RadioGroup(Story5.this);
+        final RadioGroup group3 = new RadioGroup(Story10.this);
         //We will have three radio buttons. Each radio button will contain a choice
-        final RadioButton rb10 = new RadioButton(Story5.this);
-        final RadioButton rb11 = new RadioButton(Story5.this);
+        final RadioButton rb10 = new RadioButton(Story10.this);
+        final RadioButton rb11 = new RadioButton(Story10.this);
         //Set the radio text of the choices.
         rb10.setText("Yes");
         rb11.setText("No");
@@ -133,13 +108,13 @@ public class Story5 extends ActionBarActivity {
         rb10.setGravity(Gravity.FILL_HORIZONTAL);
         rb11.setGravity(Gravity.FILL_HORIZONTAL);
         //Initialize the dialog
-        AlertDialog.Builder diag3 = new AlertDialog.Builder(Story5.this);
+        AlertDialog.Builder diag3 = new AlertDialog.Builder(Story10.this);
         //Set the RadioGroup to the dialog's view.
         diag3.setView(group3);
         //We now show the message and the speaker in the dialog.
-        diag3.setMessage("Do you think Kristin will agree to see Ray again?");
+        diag3.setMessage("Will Trevor go to the Wedding reception?");
         //Make sure the user cannot cancel the Dialog until the user answers it.
-        diag3.setCancelable(false);
+        diag3.setCancelable(true);
         diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
 
             @Override
@@ -160,12 +135,12 @@ public class Story5 extends ActionBarActivity {
                     resultingAnswer = rb10.getText().toString();
 
                     dialog3.dismiss();
-                    intent = new Intent(Story5.this, StoryViewer.class);
+                    intent = new Intent(Story10.this, StoryViewer.class);
                     startActivity(intent);
                 } else if (rb11.isChecked()) {
                     resultingAnswer = rb11.getText().toString();
                     dialog3.dismiss();
-                    intent = new Intent(Story5.this, StoryViewer.class);
+                    intent = new Intent(Story10.this, StoryViewer.class);
                     startActivity(intent);
                 }
             }
@@ -178,6 +153,5 @@ public class Story5 extends ActionBarActivity {
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
-
 
 }

@@ -187,6 +187,30 @@ public class StoryViewer extends ActionBarActivity {
                 i = new Intent(StoryViewer.this, Story5.class);
                 startActivity(i);
                 break;
+            case 4:
+                i = new Intent(StoryViewer.this, Story6.class);
+                startActivity(i);
+                break;
+            case 5:
+                i = new Intent(StoryViewer.this, Story7.class);
+                startActivity(i);
+                break;
+            case 6:
+                i = new Intent(StoryViewer.this, Story8.class);
+                startActivity(i);
+                break;
+            case 7:
+                i = new Intent(StoryViewer.this, Story9.class);
+                startActivity(i);
+                break;
+            case 8:
+                i = new Intent(StoryViewer.this, Story10.class);
+                startActivity(i);
+                break;
+            case 9:
+                i = new Intent(StoryViewer.this, Story11.class);
+                startActivity(i);
+                break;
             default:
                 break;
         }
