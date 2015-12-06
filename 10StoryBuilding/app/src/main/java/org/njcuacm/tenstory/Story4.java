@@ -33,6 +33,7 @@ public class Story4 extends ActionBarActivity {
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
+    DialogAdapter dialogAdapter1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,11 +66,11 @@ public class Story4 extends ActionBarActivity {
             }
         }, null);
 
-        dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY TWO\nTommy is Missing", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter1 = new DialogAdapter();
+        dialogAdapter1.dialogOut(this, "STORY TWO\nTommy is Missing", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogAdapter.dialogOutDialog.dismiss();
+                dialogAdapter1.dialogOutDialog.dismiss();
             }
         }, null);
 

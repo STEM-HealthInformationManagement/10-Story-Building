@@ -20,23 +20,15 @@
         android:layout_alignParentLeft="true"
         android:orientation="vertical" >
 
-        <EditText
-            android:id="@+id/editText1"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:ems="10"
-            android:inputType="text"
-            android:layout_toLeftOf="@+id/send"
-            android:layout_toStartOf="@+id/send" />
-
-        <Button
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:id="@+id/send"
+            android:text="SHOW ME THE QUESTION!"
+            android:id="@+id/showQuestionButton"
             android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
-            android:background="@drawable/ic_send"
             android:layout_alignParentEnd="true" />
 
         <Button
@@ -44,12 +36,12 @@
             android:layout_height="wrap_content"
             android:text="NEXT"
             android:id="@+id/next"
-            android:layout_alignBottom="@+id/editText1"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true" />
+
     </RelativeLayout>
 
 </RelativeLayout>

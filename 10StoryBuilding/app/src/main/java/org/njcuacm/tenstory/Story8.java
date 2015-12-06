@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
 
@@ -30,6 +31,8 @@ public class Story8 extends ActionBarActivity {
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
+    Questions questions = new Questions();
+    int conversationSwitch = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,19 +47,36 @@ public class Story8 extends ActionBarActivity {
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
-        showConversation();
         button = (Button) findViewById(R.id.questionButton);
-        button.setEnabled(true);
+        final Button nextButton = (Button) findViewById(R.id.nextButton);
+        button.setEnabled(false);
+        button.setVisibility(View.INVISIBLE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showResultingQuestion();
+                questions.showResultingQuestion(Story8.this, "Do you think Beth will return the money?");
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConversation(conversationSwitch);
+                showMainQuestions(conversationSwitch);
+                conversationSwitch++;
+                if (conversationSwitch > 11)
+                {
+                    nextButton.setEnabled(false);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
+                    button.setEnabled(true);
+                }
             }
         });
 
 
         dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY SEVEN\nStolen", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter.dialogOut(this, "STORY SEVEN\nStolen\n\n" +
+                "FOR TESTING PURPOSES, THE RIGHT ANSWER IS SHOWN IN THE TEXT FIELD, WHEN THE POP-UP SHOWS", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogAdapter.dialogOutDialog.dismiss();
@@ -64,111 +84,150 @@ public class Story8 extends ActionBarActivity {
         }, null);
     }
 
-    private void showConversation()
+    private void showConversation(int position)
     {
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Can I count on you to keep a secret?", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I’ve been doing a lot that lately.  Yes.  Whatever it is,  No one will learn ________ it from me.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I stole $5000 from the restaurant, and I’m scared of getting caught.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "What?!? You’re Miss Goody Good.  How did it happen? ", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Basically, I took out an ice bucket. ", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Huh.  I don’t understand.  Go ___________ it slowly. ", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I can’t tell you.  I’m too ashamed _________ what I’ve done.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Don’t worry ___________ what I think.  I may not agree____________ what you did, but I’m always here for you.  " +
-                        "I’ve got your back.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "The manager is always careful ____________ the cash, so he hides it in a bowl under the safe.  " +
-                        "I saw it in an ice bucket. " +
-                        " I think the other waiter was planning to steal it.  " +
-                        "Everyone thinks he did it now. " +
-                        " But really I just took it and walked out with it.  " +
-                        "I don’t know what came over me.  ", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "OK…I get it.  " +
-                        "You lost control.  " +
-                        "Maybe you were fed up ________ your job.  " +
-                        "You told me before you don’t like working there.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I don’t know…..  I know it’s late.  " +
-                        "I can’t sleep.  " +
-                        "I have nightmares.  " +
-                        "I dream about being in a police station. " +
-                        " I guess I’m really sorry ______ the whole situation," +
-                        " but I’m not ready to admit that I walked out with the money.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Come over my place and we can talk.  " +
-                        "I’ve been keeping a secret too.  ", "Kristen", 0));
+        switch (position) {
+            case 0:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Can I count on you to keep a secret?", "Beth", 0));
+                break;
+            case 1:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I’ve been doing a lot that lately.  Yes.  Whatever it is,  No one will learn ________ it from me.", "Kristen", 0));
+                break;
+            case 2:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I stole $5000 from the restaurant, and I’m scared of getting caught.", "Beth", 0));
+                break;
+            case 3:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "What?!? You’re Miss Goody Good.  How did it happen? ", "Kristen", 0));
+                break;
+            case 4:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Basically, I took out an ice bucket. ", "Beth", 0));
+                break;
+            case 5:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Huh.  I don’t understand.  Go ___________ it slowly. ", "Kristen", 0));
+                break;
+            case 6:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I can’t tell you.  I’m too ashamed _________ what I’ve done.", "Beth", 0));
+                break;
+            case 7:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Don’t worry ___________ what I think.  I may not agree____________ what you did, but I’m always here for you.  " +
+                                "I’ve got your back.", "Kristen", 0));
+                break;
+            case 8:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "The manager is always careful ____________ the cash, so he hides it in a bowl under the safe.  " +
+                                "I saw it in an ice bucket. " +
+                                " I think the other waiter was planning to steal it.  " +
+                                "Everyone thinks he did it now. " +
+                                " But really I just took it and walked out with it.  " +
+                                "I don’t know what came over me.  ", "Beth", 0));
+                break;
+            case 9:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "OK…I get it.  " +
+                                "You lost control.  " +
+                                "Maybe you were fed up ________ your job.  " +
+                                "You told me before you don’t like working there.", "Kristen", 0));
+                break;
+            case 10:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I don’t know…..  I know it’s late.  " +
+                                "I can’t sleep.  " +
+                                "I have nightmares.  " +
+                                "I dream about being in a police station. " +
+                                " I guess I’m really sorry ______ the whole situation," +
+                                " but I’m not ready to admit that I walked out with the money.", "Beth", 0));
+                break;
+            case 11:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Come over my place and we can talk.  " +
+                                "I’ve been keeping a secret too.  ", "Kristen", 0));
+                break;
+        }
     }
 
-    private void showResultingQuestion()
+    private void showMainQuestions(int position)
     {
-        // Set an EditText view to get user input
-        //final EditText getChoice = new EditText(Story2.this);
-        //getChoice.setPadding(10, 0, 10, 0);
-
-        //Over here, we'll create a RadioGroup, which will be
-        //A view for our Dialog Box.
-        final RadioGroup group3 = new RadioGroup(Story8.this);
-        //We will have three radio buttons. Each radio button will contain a choice
-        final RadioButton rb10 = new RadioButton(Story8.this);
-        final RadioButton rb11 = new RadioButton(Story8.this);
-        //Set the radio text of the choices.
-        rb10.setText("Yes");
-        rb11.setText("No");
-        //Now we add the radio buttons to the view (Radio Group)
-        group3.addView(rb10);
-        group3.addView(rb11);
-        //Change the view's gravity.
-        group3.setHorizontalGravity(Gravity.CENTER_HORIZONTAL);
-        //Set the gravity of the radio buttons to be in the middle.
-        rb10.setGravity(Gravity.FILL_HORIZONTAL);
-        rb11.setGravity(Gravity.FILL_HORIZONTAL);
-        //Initialize the dialog
-        AlertDialog.Builder diag3 = new AlertDialog.Builder(Story8.this);
-        //Set the RadioGroup to the dialog's view.
-        diag3.setView(group3);
-        //We now show the message and the speaker in the dialog.
-        diag3.setMessage("Do you think Beth will return the money?");
-        //Make sure the user cannot cancel the Dialog until the user answers it.
-        diag3.setCancelable(true);
-        diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-
-            }
-        });
-        final AlertDialog dialog3 = diag3.create();
-        dialog3.show();
-        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
-        dialog3.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent;
-                //The radio button number 3 is our answer, so check if the user chose it.
-                if (rb10.isChecked()) {
-                    resultingAnswer = rb10.getText().toString();
-
-                    dialog3.dismiss();
-                    intent = new Intent(Story8.this, StoryViewer.class);
-                    startActivity(intent);
-                } else if (rb11.isChecked()) {
-                    resultingAnswer = rb11.getText().toString();
-                    dialog3.dismiss();
-                    intent = new Intent(Story8.this, StoryViewer.class);
-                    startActivity(intent);
-                }
-            }
-        });
+        //Cases 1, 5, 6, 7(x2), 8, 9, 10
+        switch (position)
+        {
+            case 1:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Kristen: I’ve been doing a lot that lately.  Yes.  Whatever it is,  No one will learn ________ it from me.",
+                        "about"
+                );
+                break;
+            case 5:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Kristen: Huh.  I don’t understand.  Go ___________ it slowly. ",
+                        "over"
+                );
+                break;
+            case 6:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Beth:  I can’t tell you.  I’m too ashamed _________ what I’ve done.",
+                        "of"
+                );
+                break;
+            case 7:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "I may not agree____________ what you did, but I’m always here for you.  I’ve got your back.",
+                        "with"
+                );
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Kristen:  Don’t worry ___________ what I think.",
+                        "about"
+                );
+                break;
+            case 8:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Beth:  The manager is always careful ____________ the cash, so he hides it in a bowl under the safe.  " +
+                                "I saw it in an ice bucket.  " +
+                                "I think the other waiter was planning to steal it.  " +
+                                "Everyone thinks he did it now.  " +
+                                "But really I just took it and walked out with it.  " +
+                                "I don’t know what came over me.  ",
+                        "of"
+                );
+                break;
+            case 9:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Kristen: OK…I get it.  " +
+                                "You lost control.  " +
+                                "Maybe you were fed up ________ your job.  " +
+                                "You told me before you don’t like working there.",
+                        "with"
+                );
+                break;
+            case 10:
+                questions.showEditableChoice(
+                        Story8.this,
+                        "Beth:  I don’t know…..  " +
+                                "I know it’s late.  " +
+                                "I can’t sleep.  " +
+                                "I have nightmares.  " +
+                                "I dream about being in a police station.  " +
+                                "I guess I’m really sorry ______ the whole situation, but I’m not ready to admit that I walked out with the money.",
+                        "about"
+                );
+                break;
+        }
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

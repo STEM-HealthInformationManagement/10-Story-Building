@@ -21,5 +21,7 @@ Read the messages on these phones.  Solve the phrasal verbs and then solve the d
     <string name="title_activity_story9">Story Eight - Parents\' Worries</string>
     <string name="title_activity_story10">Story Nine - Confused about Gay Marriage</string>
     <string name="title_activity_story11">Story Ten - Fear Loves Company</string>
+    <string name="title_activity_about">About Ten Story Building</string>
+    <string name="title_activity_story_conclusion">Conclusion: Murder</string>
 
 </resources>

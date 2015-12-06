@@ -9,14 +9,18 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
+import org.njcuacm.exceptions.NotAChoiceException;
 
 public class Story5 extends ActionBarActivity {
 
@@ -24,7 +28,10 @@ public class Story5 extends ActionBarActivity {
     public ListView lv;
     public String resultingAnswer;
     Button button;
+    Button nextButton;
     DialogAdapter dialogAdapter;
+    int conversationSwitch = 0;
+    Questions questions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +46,10 @@ public class Story5 extends ActionBarActivity {
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
-        showConversation();
+        //----showConversation();
+        nextButton = (Button) findViewById(R.id.nextButton);
         button = (Button) findViewById(R.id.showQuestionButton);
+        button.setVisibility(View.INVISIBLE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,61 +63,195 @@ public class Story5 extends ActionBarActivity {
                 dialogAdapter.dialogOutDialog.dismiss();
             }
         }, null);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConversation(conversationSwitch);
+                try {
+                    showMainQuestions(conversationSwitch);
+                } catch (NotAChoiceException e) {
+                    e.printStackTrace();
+                }
+                conversationSwitch++;
+                if(conversationSwitch > 8)
+                {
+                    nextButton.setEnabled(false);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
-    private void showConversation()
+    private void showConversation(int position)
     {
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "To: Dr. Coning\n" +
-                        "From: Kristen Santos\n" +
-                        "RE: Thank you\n" +
-                        "\n" +
-                        "Dear Dr. Coning\n" +
-                        "\n" +
-                        "I just want to send you a ‘thank-you’ for the way you treated my daughter in the emergency room.  She is usually so frightened of doctors and hospitals.  You made the experience fun, for her and me.  \n" +
-                        "Sincerely,\n" +
-                        "Kristen\n", "Email Message:", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Kristen,\n" +
-                        "It was my pleasure.  She’s a wonderful girl and you’re a wonderful mom, and woman.  Please bring her by for a follow up visit.   Text me when you can come.  If I’m not busy with an emergency, maybe we can have lunch.\n" +
-                        "Ray.\n", "Reply:", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "=====================================", "Text", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Ray, My daughter is doing great, so no need for a visit.  I’m still interested in lunch.  Are you free today?", "Kristen", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Sure, come by the hospital at 1pm.   " +
-                        "There’s a new Brazilian Restaurant that I’ve been excited about trying.  " +
-                        "It’s a little far, but I’m bored with all of the restaurants close to the hospital. " +
-                        "Do you like Brazilian food?", "Ray", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Love it.", "Kristin", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Thank you so much for lunch today.   " +
-                        "I was not disappointed with the food....or the company.  " +
-                        "Do you get this friendly with all of your patients or am I just lucky?", "Kristin", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "To Kristin,\n" +
-                        "I had a very good time at lunch...too good.   You should know that I am married to a wonderful woman, and I have four beautiful daughters.   I had no right to ask you to lunch, but you fascinated me so much.   Now that you know I have a wife, would you still agree with another lunch date with me?\n" +
-                        "Sincerely,\n" +
-                        "Ray\n.", "Email", 0));
-
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Ray,\n" +
-                        "I suspected that.  You should know that I’m a single mom, and I am responsible for working to support my two kids.  I’m also the cook, cleaner, therapist, taxi driver, coach, mother and father to them.  \n" +
-                        "I would love to see you again.   I haven’t had such a great time with a man in years...we really connect.  Funny, I am actually jealous of your wife—she has you.  You’re handsome, kind, charming…but you are hers!\n" +
-                        "I don’t know if I want to connected to you socially or emotionally or.... \n" +
-                        "My head is spinning!\n" +
-                        "Kristin\n", "Email", 0));
+        //Every time the method is called, it will add the specific line based on the CASE.
+        switch (position) {
+            case 0:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "To: Dr. Coning\n" +
+                            "From: Kristen Santos\n" +
+                            "RE: Thank you\n" +
+                            "\n" +
+                            "Dear Dr. Coning\n" +
+                            "\n" +
+                            "I just want to send you a ‘thank-you’ for the way you treated my daughter in the emergency room.  She is usually so frightened of doctors and hospitals.  You made the experience fun, for her and me.  \n" +
+                            "Sincerely,\n" +
+                            "Kristen\n", "Email Message:", 0));
+                break;
+            case 1:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Kristen,\n" +
+                            "It was my pleasure.  She’s a wonderful girl and you’re a wonderful mom, and woman.  Please bring her by for a follow up visit.   Text me when you can come.  If I’m not busy with an emergency, maybe we can have lunch.\n" +
+                            "Ray.\n", "Reply:", 0));
+                break;
+            case 2:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "=====================================", "Text", 0));
+                break;
+            case 3:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Ray, My daughter is doing great, so no need for a visit.  I’m still interested in lunch.  Are you free today?", "Kristen", 0));
+                break;
+            case 4:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Sure, come by the hospital at 1pm.   " +
+                            "There’s a new Brazilian Restaurant that I’ve been excited about trying.  " +
+                            "It’s a little far, but I’m bored with all of the restaurants close to the hospital. " +
+                            "Do you like Brazilian food?", "Ray", 0));
+                break;
+            case 5:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Love it.", "Kristin", 0));
+                break;
+            case 6:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Thank you so much for lunch today.   " +
+                            "I was not disappointed with the food....or the company.  " +
+                            "Do you get this friendly with all of your patients or am I just lucky?", "Kristin", 0));
+                break;
+            case 7:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "To Kristin,\n" +
+                            "I had a very good time at lunch...too good.   You should know that I am married to a wonderful woman, and I have four beautiful daughters.   I had no right to ask you to lunch, but you fascinated me so much.   Now that you know I have a wife, would you still agree with another lunch date with me?\n" +
+                            "Sincerely,\n" +
+                            "Ray\n.", "Email", 0));
+                break;
+            case 8:
+            adapter.add(new SelectiveDisplayTextAdapter(false,
+                    "Ray,\n" +
+                            "I suspected that.  You should know that I’m a single mom, and I am responsible for working to support my two kids.  I’m also the cook, cleaner, therapist, taxi driver, coach, mother and father to them.  \n" +
+                            "I would love to see you again.   I haven’t had such a great time with a man in years...we really connect.  Funny, I am actually jealous of your wife—she has you.  You’re handsome, kind, charming…but you are hers!\n" +
+                            "I don’t know if I want to connected to you socially or emotionally or.... \n" +
+                            "My head is spinning!\n" +
+                            "Kristin\n", "Email", 0));
+                break;
+        }
     }
 
+    private void showMainQuestions(int position) throws NotAChoiceException {
+        questions = new Questions();
+        switch (position) {
+            case 0:
+
+                break;
+            case 1:
+                questions.showThreeChoices(
+                        Story5.this,
+                        "with",
+                        "on",
+                        "in",
+                        "It was my pleasure.  " +
+                                "She’s a wonderful girl and you’re a wonderful mom, and woman.  " +
+                                "Please bring her by for a follow up visit.   " +
+                                "Text me when you can come.  " +
+                                "If I’m not busy ______ an emergency, maybe we can have lunch.", 0);
+                break;
+            case 2:
+
+                break;
+            case 3:
+                questions.showThreeChoices(
+                    Story5.this,
+                    "interested in",
+                    "interested with",
+                    "interesting into",
+                    "Ray, My daughter is doing great, so no need for a visit.  " +
+                            "I’m still ________________ lunch.  Are you free today?",
+                    0);
+                break;
+            case 4:
+                /*questions.showThreeChoices(
+                        Story5.this,
+                        "",
+                        "",
+                        "",
+                        "",
+                        0);*/
+                break;
+            case 5:
+                /*questions.showThreeChoices(
+                        Story5.this,
+                        "",
+                        "",
+                        "",
+                        "",
+                        0);*/
+                break;
+            case 6:
+                questions.showThreeChoices(
+                        Story5.this,
+                        "with",
+                        "in",
+                        "on",
+                        "Thank you so much for lunch today.   " +
+                                "I was not disappointed __________ the food….or the company.  " +
+                                "Do you get this friendly with all of your patients or am I just lucky?",
+                        0);
+                break;
+            case 7:
+                questions.showThreeChoices(
+                        Story5.this,
+                        "with",
+                        "to",
+                        "on",
+                        "I had a very good time at lunch…too good.   " +
+                                "You should know that I am married __________ a wonderful woman, and I have four beautiful daughters.   ",
+                        1);
+                questions.showThreeChoices(
+                        Story5.this,
+                        "to",
+                        "with",
+                        "in",
+                        "I had no right to ask you to lunch, but you fascinated me so much.   " +
+                                "Now that you know I have a wife, would you still agree __________ another lunch date with me?",
+                        0);
+                break;
+            case 8:
+                questions.showThreeChoices(
+                        Story5.this,
+                        "in",
+                        "with",
+                        "for",
+                        "I suspected that.  " +
+                                "You should know that I’m a single mom, and I am responsible __________ working to support my two kids.  " +
+                                "I’m also the cook, cleaner, therapist, taxi driver, coach, mother and father to them.  \n" +
+                                "I would love to see you again.",
+                        2);
+                questions.showThreeChoices(
+                        Story5.this,
+                        "of",
+                        "on",
+                        "through",
+                        "I haven’t had such a great time with a man in years…we really connect.  " +
+                                "Funny, I am actually jealous __________ your wife—she has you.  " +
+                                "You’re handsome, kind, charming…but you are hers!\n" +
+                                "I don’t know if I want to connected to you socially or emotionally or…. \n" +
+                                "My head is spinning!\n",
+                        0);
+                break;
+        }
+    }
     private void showResultingQuestion()
     {
         // Set an EditText view to get user input
@@ -178,6 +321,8 @@ public class Story5 extends ActionBarActivity {
         onBackPressed();
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 }

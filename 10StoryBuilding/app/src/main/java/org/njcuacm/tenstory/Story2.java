@@ -5,6 +5,7 @@ package org.njcuacm.tenstory;
  */
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -37,6 +38,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.njcuacm.adapters.DisplayTextAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.TextAdapter;
 import org.njcuacm.filemanager.InputOutput;
 
@@ -52,13 +54,15 @@ public class Story2 extends ActionBarActivity {
     int co = 0;
     int cont = 0;
     int sp = InputOutput.ReadInteger("stn/" + Story1.sys);
+    Questions questions = new Questions();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story2);
         //Rename our title on the ActionBar and have the score show up as well.
-        setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+        //setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+        setTitle("Story One - Quitting Doesn't End It");
         //Get our action bar on the top and set it to show up as a Back Button Arrow ( <- )
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //Now we scan the STORY 1 File from the device
@@ -77,8 +81,15 @@ public class Story2 extends ActionBarActivity {
         sp = InputOutput.ReadInteger("stn/" + Story1.sys);
         //Layout all of our stuff.
         final Button next = (Button) findViewById(R.id.next);
+        final Button questionButton = (Button) findViewById(R.id.showQuestionButton);
+        questionButton.setVisibility(View.INVISIBLE);
+        questionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questions.showResultingQuestion(Story2.this, "Do you think Beth will succeed at her new job?");
+            }
+        });
         lv = (ListView) findViewById(R.id.listView1);
-        final Button SEND = (Button) findViewById(R.id.send);
 
         //The Following is to customize the Action Bar of Story1 view.
 
@@ -123,117 +134,6 @@ public class Story2 extends ActionBarActivity {
         adapter = new TextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
-
-        //Layout the EditText
-        editText1 = (EditText) findViewById(R.id.editText1);
-        editText1.setVisibility(View.INVISIBLE);
-        SEND.setVisibility(View.INVISIBLE);
-        editText1.setImeActionLabel("CHECK", EditorInfo.IME_ACTION_GO);
-        //The onKeyListener is for the Device's Virtual Keyboard.
-        //We will use the Enter button of the keyboard and detect it to do something.
-        editText1.setOnKeyListener(new OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
-                    if (editText1.getText().toString() != null) {
-                        adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
-
-                        scrollListView();
-                        if (editText1.getText().toString().toLowerCase().equals("no") || editText1.getText().toString().toLowerCase().equals("yes")) {
-                            AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
-                            diag.setMessage("Congratulations! You've finished Story One!\n\n" +
-                                    "You have now unlocked Story Two!");
-                            diag.setCancelable(false);
-                            diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    // TODO Auto-generated method stub
-
-                                }
-                            });
-
-                            final AlertDialog dialog = diag.create();
-                            dialog.show();
-                            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent i = new Intent(Story2.this, StoryViewer.class);
-                                    if (sp <= 120) {
-                                        InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
-                                    }
-                                    startActivity(i);
-                                    finish();
-                                }
-                            });
-                        }
-                        editText1.setText("");
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-        //In this onClickListener, we will show the ListView and it's items
-        editText1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollListView();
-            }
-        });
-        editText1.setHint(R.string.answer_placeholder);
-
-        SEND.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editText1.getText().toString() != null) {
-                    adapter.add(new DisplayTextAdapter(false, editText1.getText().toString(), "You"));
-                    InputMethodManager imm = (InputMethodManager) getSystemService(
-                            Context.INPUT_METHOD_SERVICE);
-
-
-                    editText1.clearFocus();
-                    imm.hideSoftInputFromInputMethod(editText1.getWindowToken(), InputMethodManager.HIDE_IMPLICIT_ONLY);
-                    scrollListView();
-                    if(editText1.getText().toString().toLowerCase().equals("no")) {
-                        AlertDialog.Builder diag = new AlertDialog.Builder(Story2.this);
-                        diag.setMessage("Congratulations! You've finished Story One!\n\n" +
-                                "You have now unlocked Story Two!");
-                        diag.setCancelable(false);
-                        diag.setPositiveButton("AWESOME!", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // TODO Auto-generated method stub
-
-                            }
-                        });
-
-                        final AlertDialog dialog = diag.create();
-                        dialog.show();
-                        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent i = new Intent(Story2.this, StoryViewer.class);
-                                if(sp <= 120) {
-                                    InputOutput.Write("stn/" + Story1.sys, Integer.toString(sp));
-                                }                                startActivity(i);
-                                finish();
-                            }
-                        });
-                    }
-                    editText1.setText("");
-                }
-
-            }
-        });
-        next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,7 +215,7 @@ public class Story2 extends ActionBarActivity {
                                                 {
                                                     Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
                                                     sp += 10;
-                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                                    //setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 1;
                                                     co++;
                                                     dialog.dismiss();
@@ -325,7 +225,7 @@ public class Story2 extends ActionBarActivity {
                                                     //The dialog should stay open here...
                                                     Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
                                                     sp -= 15;
-                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                                    //setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 0;
                                                 }
                                             }
@@ -375,7 +275,7 @@ public class Story2 extends ActionBarActivity {
                                                 {
                                                     Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
                                                     sp += 10;
-                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                                    //setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 2;
                                                     co++;
                                                     dialog.dismiss();
@@ -385,7 +285,7 @@ public class Story2 extends ActionBarActivity {
                                                     //The dialog should stay open here...
                                                     Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
                                                     sp -= 15;
-                                                    setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
+                                                    //setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                                     cont = 1;
                                                 }
                                             }
@@ -417,27 +317,14 @@ public class Story2 extends ActionBarActivity {
                     }
                     else
                     {
-                        editText1.setVisibility(View.VISIBLE);
-                        SEND.setVisibility(View.VISIBLE);
                         next.setVisibility(View.INVISIBLE);
+                        questionButton.setVisibility(View.VISIBLE);
                     }
             }
         });
         System.out.println(storycount);
     }
 
-    private void addItems() {
-        adapter.add(new DisplayTextAdapter(true, "Girl, I cannot believe you quit today.\nEspecially with the holidays so close.", "Kristen Kosakowski"));
-    }
-
-    private static int getRandomInteger(int aStart, int aEnd) {
-        if (aStart > aEnd) {
-            throw new IllegalArgumentException("Start cannot exceed End.");
-        }
-        long range = (long) aEnd - (long) aStart + 1;
-        long fraction = (long) (range * random.nextDouble());
-        return (int) (fraction + aStart);
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -457,16 +344,5 @@ public class Story2 extends ActionBarActivity {
                 lv.setSelection(adapter.getCount() - 1);
             }
         });
-    }
-
-    class DiagListenerForChoices implements View.OnClickListener {
-        private final Dialog dialog;
-        public DiagListenerForChoices(Dialog dialog) {
-            this.dialog = dialog;
-        }
-        @Override
-        public void onClick(View v) {
-
-        }
     }
 }

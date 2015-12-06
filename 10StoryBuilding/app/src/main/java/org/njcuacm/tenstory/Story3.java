@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -21,7 +22,9 @@ import org.njcuacm.adapters.DialogViewTextAdapter;
 import org.njcuacm.adapters.DisplayTextAdapter;
 import org.njcuacm.adapters.FakebookDisplayTextAdapter;
 import org.njcuacm.adapters.FakebookTextAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.TextAdapter;
+import org.njcuacm.exceptions.NotAChoiceException;
 import org.njcuacm.filemanager.InputOutput;
 
 import java.io.File;
@@ -40,6 +43,7 @@ import it.gmariotti.cardslib.library.view.CardListView;
 public class Story3 extends ActionBarActivity {
 
     DialogAdapter dialogAdapter = new DialogAdapter();
+    DialogAdapter dialogAdapter1;
     ListView listView;
     private DialogViewTextAdapter dialogViewTextAdapter;
     ArrayList<String> phraseArray;
@@ -50,6 +54,10 @@ public class Story3 extends ActionBarActivity {
     boolean questionTwoAnswered = false;
     boolean questionThreeAnswered = false;
     public String resultingAnswer;
+    public Button showResultingQuestionButton;
+    public Button nextButton;
+    Questions questions = new Questions();
+    int conversationSwitch = 0;
     //DialogAdapter dialogAdapter;
 
     @Override
@@ -63,6 +71,35 @@ public class Story3 extends ActionBarActivity {
         adapter = new FakebookTextAdapter(getApplicationContext(), R.layout.fakebook_comment_list);
         //Now set our ListView's dialogViewTextAdapter to the TextAdapter.
         lv.setAdapter(adapter);
+        showResultingQuestionButton = (Button) findViewById(R.id.showResultingQuestionButton);
+        nextButton = (Button) findViewById(R.id.nextItemButton);
+        showResultingQuestionButton.setVisibility(View.INVISIBLE);
+        showResultingQuestionButton.setEnabled(false);
+        showResultingQuestionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questions.showResultingQuestion(Story3.this, "Do you think Ravi is still interested in a relationship with Trevor?");
+            }
+        });
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFakebookComments(conversationSwitch);
+                try {
+                    showMainQuestions(conversationSwitch);
+                } catch (NotAChoiceException e) {
+                    e.printStackTrace();
+                }
+                conversationSwitch++;
+                if (conversationSwitch > 5) {
+                    nextButton.setEnabled(false);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    showResultingQuestionButton.setVisibility(View.VISIBLE);
+                    showResultingQuestionButton.setEnabled(true);
+                }
+            }
+        });
+
         /*boolean b = false;
         for(int i = 0; i <= 10; i++) {
             b = !b;
@@ -70,7 +107,7 @@ public class Story3 extends ActionBarActivity {
                     "The text they say number " + i, "Test Speaker " + i, R.drawable.tsb_action_null_image));
             System.out.println(b);
         }*/
-        addFakebookComments();
+
         dialogViewTextAdapter = new DialogViewTextAdapter(getApplicationContext(), R.layout.dialog_view_list);
         /*for(int i = 0; i <= 15; i++)
         {
@@ -135,16 +172,16 @@ public class Story3 extends ActionBarActivity {
             }
         }, null);
 
-        dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY THREE\nWedding Date", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter1 = new DialogAdapter();
+        dialogAdapter1.dialogOut(this, "STORY THREE\nWedding Date", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogAdapter.dialogOutDialog.dismiss();
+                dialogAdapter1.dialogOutDialog.dismiss();
             }
         }, null);
 
         //lv.getItemAtPosition(0).
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        /*lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position)
@@ -199,10 +236,10 @@ public class Story3 extends ActionBarActivity {
                                     if (rb2.isChecked()) {
                                         questionOneAnswered = true;
                                         Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
-                                    /*sp += 10;
+                                    *//*sp += 10;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
-                                    co++;*/
+                                    co++;*//*
                                         if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered)
                                         {
                                             showResultingQuestion();
@@ -211,9 +248,9 @@ public class Story3 extends ActionBarActivity {
                                     } else {
                                         //The dialog should stay open here...
                                         Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
-                                    /*sp -= 15;
+                                    *//*sp -= 15;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
-                                    cont = 0;*/
+                                    cont = 0;*//*
                                     }
                                 }
                             });
@@ -273,10 +310,10 @@ public class Story3 extends ActionBarActivity {
                                     if (rb5.isChecked()) {
                                         questionTwoAnswered = true;
                                         Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
-                                    /*sp += 10;
+                                    *//*sp += 10;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
-                                    co++;*/
+                                    co++;*//*
                                         if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered)
                                         {
                                             showResultingQuestion();
@@ -285,9 +322,9 @@ public class Story3 extends ActionBarActivity {
                                     } else {
                                         //The dialog should stay open here...
                                         Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
-                                    /*sp -= 15;
+                                    *//*sp -= 15;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
-                                    cont = 0;*/
+                                    cont = 0;*//*
                                     }
                                 }
                             });
@@ -347,10 +384,10 @@ public class Story3 extends ActionBarActivity {
                                     if (rb7.isChecked()) {
                                         questionThreeAnswered = true;
                                         Toast.makeText(getApplicationContext(), "Good Job!", Toast.LENGTH_SHORT).show();
-                                    /*sp += 10;
+                                    *//*sp += 10;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
                                     cont = 1;
-                                    co++;*/
+                                    co++;*//*
                                         if (questionOneAnswered && questionTwoAnswered && questionThreeAnswered)
                                         {
                                             showResultingQuestion();
@@ -359,9 +396,9 @@ public class Story3 extends ActionBarActivity {
                                     } else {
                                         //The dialog should stay open here...
                                         Toast.makeText(getApplicationContext(), "Try again", Toast.LENGTH_SHORT).show();
-                                    /*sp -= 15;
+                                    *//*sp -= 15;
                                     setTitle("Story One \t\t\t\t\tPOINTS: " + Integer.toString(sp));
-                                    cont = 0;*/
+                                    cont = 0;*//*
                                     }
                                 }
                             });
@@ -371,7 +408,7 @@ public class Story3 extends ActionBarActivity {
                         break;
                 }
             }
-        });
+        });*/
 
 
     }
@@ -402,7 +439,7 @@ public class Story3 extends ActionBarActivity {
         //return super.onOptionsItemSelected(item);
     }
 
-    private void doPhrasalVerbLook()
+    public void doPhrasalVerbLook()
     {
         //final DialogAdapter dialogAdapter = new DialogAdapter();
         listView = new ListView(Story3.this);
@@ -420,42 +457,94 @@ public class Story3 extends ActionBarActivity {
         }, null);
     }
 
-    private void addFakebookComments()
+    private void addFakebookComments(int position)
     {
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "If I could \"like\" this a million times, I would.  " +
-                        "I’m so fond of the two of you.  " +
-                        "I couldn’t be happier.  " +
-                        "This couldn’t have happened __________ a pair of nicer people.  " +
-                        "I can’t wait until the party. ", "Ravi Gupta ", R.drawable.tsb_action_null_image, R.color.grey2));
+        switch (position) {
+            case 0:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "If I could \"like\" this a million times, I would.  " +
+                                "I'm so fond of the two of you.  " +
+                                "I couldn't be happier.  " +
+                                "This couldn't have happened __________ a pair of nicer people.  " +
+                                "I can't wait until the party. ", "Ravi Gupta ", R.drawable.tsb_action_null_image, 0));
+                break;
+            case 1:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "Hey Trevor, do you happen to be free on Saturday night? " +
+                                "We're invited to a wedding reception-" +
+                                "-Danny McAden is now married to Gregory Adams, and they are having a party.", "Ravi Gupta", R.drawable.tsb_action_null_image, 0));
+                break;
+            case 2:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "Two guys!   No way.  " +
+                                "I don't agree to that stuff.  " +
+                                "I don't want to be responsible for society coming to an end!  " +
+                                "I won't be a part of it.   " +
+                                "And, oh, I'm busy with work that night—Steve is on vacation and asked if I could work for him.", "Trevor", R.drawable.tsb_action_null_image, 0));
+                break;
+            case 3:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "You can turn __________ the excuses.   " +
+                                "I know you don't have work.  " +
+                                "These people are in love. " +
+                                "I'm disappointed with your attitude.  " +
+                                "I should be more careful with who I ask…and who I date. ", "Ravi Gupta", R.drawable.tsb_action_null_image, 0));
+                break;
+            case 4:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "Come on.  I'm a good person.  Two guys getting married--Yuck.", "Trevor", R.drawable.tsb_action_null_image, 0));
+                break;
+            case 5:
+                adapter.add(new FakebookDisplayTextAdapter(false,
+                        "I didn't think you were capable __________ that type of prejudice.  " +
+                                "I'll just go by myself.  Don't bother calling me again.", "Ravi Gupta", R.drawable.tsb_action_null_image, 0));
+                break;
+        }
+    }
 
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "Hey Trevor, do you happen to be free on Saturday night? " +
-                        "We’re invited to a wedding reception-" +
-                        "-Danny McAden is now married to Gregory Adams, and they are having a party.", "Ravi Gupta", R.drawable.tsb_action_null_image, 0));
-
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "Two guys!   No way.  " +
-                        "I don’t agree to that stuff.  " +
-                        "I don’t want to be responsible for society coming to an end!  " +
-                        "I won’t be a part of it.   " +
-                        "And, oh, I’m busy with work that night—Steve is on vacation and asked if I could work for him.", "Trevor", R.drawable.tsb_action_null_image, 0));
-
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "You can turn __________ the excuses.   " +
-                        "I know you don’t have work.  " +
-                        "These people are in love. " +
-                        "I’m disappointed with your attitude.  " +
-                        "I should be more careful with who I ask…and who I date. ", "Ravi Gupta", R.drawable.tsb_action_null_image, R.color.grey2));
-
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "Come on.  I’m a good person.  Two guys getting married--Yuck.", "Trevor", R.drawable.tsb_action_null_image, 0));
-
-        adapter.add(new FakebookDisplayTextAdapter(false,
-                "I didn’t think you were capable __________ that type of prejudice.  " +
-                        "I’ll just go by myself.  Don’t bother calling me again.", "Ravi Gupta", R.drawable.tsb_action_null_image, R.color.grey2));
-
-
+    private void showMainQuestions(int position) throws NotAChoiceException
+    {
+        switch (position)
+        {
+            case 0:
+                questions.showTwoChoices(
+                        Story3.this,
+                        "on",
+                        "to",
+                        "If I could \"like\" this a million times, I would.  " +
+                                "I'm so fond of the two of you.  " +
+                                "I couldn't be happier.  " +
+                                "This couldn't have happened __________ a pair of nicer people.  " +
+                                "I can't wait until the party.",
+                        1);
+                break;
+            case 3:
+                questions.showThreeChoices(
+                        Story3.this,
+                        "off",
+                        "in",
+                        "on",
+                        "You can turn __________ the excuses.   " +
+                                "I know you don't have work.  " +
+                                "These people are in love. " +
+                                "I'm disappointed with your attitude.  " +
+                                "I should be more careful with who I ask ... and who I date.  ",
+                        0
+                );
+                break;
+            case 5:
+                questions.showThreeChoices(
+                        Story3.this,
+                        "with",
+                        "in",
+                        "of",
+                        "I didn't think you were capable __________ that type of prejudice.  " +
+                                "I'll just go by myself.  " +
+                                "Don't bother calling me again.",
+                        0
+                );
+                break;
+        }
     }
 
     private void showResultingQuestion()

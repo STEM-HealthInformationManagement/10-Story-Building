@@ -14,6 +14,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
 
@@ -30,6 +31,8 @@ public class Story11 extends ActionBarActivity {
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
+    Questions questions = new Questions();
+    int conversationSwitch = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,19 +46,35 @@ public class Story11 extends ActionBarActivity {
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
-        showConversation();
         button = (Button) findViewById(R.id.questionButton);
-        button.setEnabled(true);
+        final Button nextButton = (Button) findViewById(R.id.nextButton);
+        button.setEnabled(false);
+        button.setVisibility(View.INVISIBLE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showResultingQuestion();
             }
         });
-
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConversation(conversationSwitch);
+                showMainQuestions(conversationSwitch);
+                conversationSwitch++;
+                if (conversationSwitch > 16)
+                {
+                    nextButton.setEnabled(false);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
+                    button.setEnabled(true);
+                }
+            }
+        });
 
         dialogAdapter = new DialogAdapter();
-        dialogAdapter.dialogOut(this, "STORY TEN\nFear Loves Company", true, false, true, "OK", null, new View.OnClickListener() {
+        dialogAdapter.dialogOut(this, "STORY TEN\nFear Loves Company\n\n" +
+                "FOR TESTING PURPOSES, THE RIGHT ANSWER IS SHOWN IN THE TEXT FIELD, WHEN THE POP-UP SHOWS", true, false, true, "OK", null, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogAdapter.dialogOutDialog.dismiss();
@@ -63,67 +82,161 @@ public class Story11 extends ActionBarActivity {
         }, null);
     }
 
-    private void showConversation()
+    private void showConversation(int position)
     {
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Can I spend a few days at your place?  " +
-                        "My kids are with their father, and I’m afraid to stay by myself. ", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Sure.  It will give me a reason to make a big pot of my spicy chili.  " +
-                        "You know I'm famous for it in this building :)", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Yes, you're famous for smelling up the building with the odor.  ;)", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I've been here 3 years—everyone here should be accustomed ____ the \"aroma\"", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "lol.  I need a good meal and a good laugh.  " +
-                        "I'm getting scared ___my doctor friend.  " +
-                        "His messages are frightening.  ", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I can’t disagree with that--I always thought he was creepy.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I can’t get rid of him.  " +
-                        "He’s so mad at me for breaking up with him, but HE'S MARRIED!", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I’m sorry about your problems.  " +
-                        "Look at the bright side-" +
-                        "-At least you don’t have the police looking for you, like I do.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I might call the police myself..." +
-                        "if he doesn't agree ______ stop contacting me " +
-                        "and just forget about the whole thing.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I’m really surprised ________ you.  " +
-                        "Did you really think he would leave his wife and kids?  " +
-                        "Sorry.  I shouldn’t blame you....too much.  " +
-                        "You should call the police on him.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Not yet.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Just think about it.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I will think about it.  " +
-                        "Hmmm...speaking of things to think about--" +
-                        "-do I have to sleep with your stolen money?  " +
-                        "We can worry about that instead, lol.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "No, I asked my neighbor to hold it.  " +
-                        "I can count ____ her not to say anything.  " +
-                        "Her husband was a criminal, and she kept his secrets. lol.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "lol.  You can depend _____ her, but what about him?  " +
-                        "You need to spend that money fast.", "Kristen", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "I’m not going to spend it.  " +
-                        "I actually talked to my priest and he convinced me to return it and admit that I took it.  " +
-                        "I’m committed _______ doing the right thing now.", "Beth", 0));
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "Great—you’ll definitely go to jail now.  " +
-                        "Let’s talk about.  " +
-                        "There’s a big snowstorm coming tonight, so we’ll have plenty of time to eat, " +
-                        "talk, and worry.  Love you.", "Kristen", 0));
+        switch (position) {
+            case 0:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Can I spend a few days at your place?  " +
+                                "My kids are with their father, and I’m afraid to stay by myself. ", "Kristen", 0));
+                break;
+            case 1:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Sure.  It will give me a reason to make a big pot of my spicy chili.  " +
+                                "You know I'm famous for it in this building :)", "Beth", 0));
+                break;
+            case 2:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Yes, you're famous for smelling up the building with the odor.  ;)", "Kristen", 0));
+                break;
+            case 3:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I've been here 3 years—everyone here should be accustomed ____ the \"aroma\"", "Beth", 0));
+                break;
+            case 4:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "lol.  I need a good meal and a good laugh.  " +
+                                "I'm getting scared ___my doctor friend.  " +
+                                "His messages are frightening.  ", "Kristen", 0));
+                break;
+            case 5:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I can’t disagree with that--I always thought he was creepy.", "Beth", 0));
+                break;
+            case 6:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I can’t get rid of him.  " +
+                                "He’s so mad at me for breaking up with him, but HE'S MARRIED!", "Kristen", 0));
+                break;
+            case 7:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I’m sorry about your problems.  " +
+                                "Look at the bright side-" +
+                                "-At least you don’t have the police looking for you, like I do.", "Beth", 0));
+                break;
+            case 8:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I might call the police myself..." +
+                                "if he doesn't agree ______ stop contacting me " +
+                                "and just forget about the whole thing.", "Kristen", 0));
+                break;
+            case 9:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I’m really surprised ________ you.  " +
+                                "Did you really think he would leave his wife and kids?  " +
+                                "Sorry.  I shouldn’t blame you....too much.  " +
+                                "You should call the police on him.", "Beth", 0));
+                break;
+            case 10:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Not yet.", "Kristen", 0));
+                break;
+            case 11:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Just think about it.", "Beth", 0));
+                break;
+            case 12:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I will think about it.  " +
+                                "Hmmm...speaking of things to think about--" +
+                                "-do I have to sleep with your stolen money?  " +
+                                "We can worry about that instead, lol.", "Kristen", 0));
+                break;
+            case 13:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "No, I asked my neighbor to hold it.  " +
+                                "I can count ____ her not to say anything.  " +
+                                "Her husband was a criminal, and she kept his secrets. lol.", "Beth", 0));
+                break;
+            case 14:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "lol.  You can depend _____ her, but what about him?  " +
+                                "You need to spend that money fast.", "Kristen", 0));
+                break;
+            case 15:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "I’m not going to spend it.  " +
+                                "I actually talked to my priest and he convinced me to return it and admit that I took it.  " +
+                                "I’m committed _______ doing the right thing now.", "Beth", 0));
+                break;
+            case 16:
+                adapter.add(new SelectiveDisplayTextAdapter(false,
+                        "Great—you’ll definitely go to jail now.  " +
+                                "Let’s talk about.  " +
+                                "There’s a big snowstorm coming tonight, so we’ll have plenty of time to eat, " +
+                                "talk, and worry.  Love you.", "Kristen", 0));
+                break;
+        }
+    }
 
-
+    private void showMainQuestions(int position)
+    {
+        //Cases 3, 4, 8, 9, 13, 14, 15
+        switch (position)
+        {
+            case 3:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Beth:  I’ve been here 3 years—everyone here should be accustomed ____ the \"aroma\".  ",
+                        "to"
+                );
+                break;
+            case 4:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Kristen: lol.  I need a good meal and a good laugh.  " +
+                                "I’m getting scared ___my doctor friend.  His messages are frightening.  ",
+                        "of"
+                );
+                break;
+            case 8:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Kristen: I might call the police myself…if he doesn’t agree ______ stop contacting me and just forget about the whole thing.",
+                        "to"
+                );
+                break;
+            case 9:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Beth: I’m really surprised ________ you.  Did you really think he would leave his wife and kids?  Sorry.  I shouldn’t blame you….too much.  You should call the police on him.",
+                        "at"
+                );
+                break;
+            case 13:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Beth: No, I asked my neighbor to hold it.  I can count ____ her not to say anything.  Her husband was a criminal, and she kept his secrets. lol.",
+                        "on"
+                );
+                break;
+            case 14:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Kristen:  lol.  You can depend _____ her, but what about him?  You need to spend that money fast.",
+                        "on"
+                );
+                break;
+            case 15:
+                questions.showEditableChoice(
+                        Story11.this,
+                        "Beth:  I’m not going to spend it.  " +
+                                "I actually talked to my priest and he convinced me to return it and admit that I took it.  " +
+                                "I’m committed _______ doing the right thing now.",
+                        "to"
+                );
+                break;
+        }
     }
 
     private void showResultingQuestion()

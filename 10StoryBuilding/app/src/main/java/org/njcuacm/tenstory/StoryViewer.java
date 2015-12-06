@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Environment;
+import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,6 +16,9 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.adapters.DialogDisplayListAdapter;
+import org.njcuacm.adapters.DialogViewTextAdapter;
 import org.njcuacm.adapters.DisplayTextAdapter;
 import org.njcuacm.adapters.TextAdapter;
 import org.njcuacm.filemanager.InputOutput;
@@ -22,6 +26,7 @@ import org.njcuacm.filemanager.InputOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -34,12 +39,19 @@ public class StoryViewer extends ActionBarActivity {
     private Scanner s;
     public int sp = InputOutput.ReadInteger("stn/" + Story1.sys);
     int p = 0;
+    ListView listView;
+    private DialogViewTextAdapter dialogViewTextAdapter;
+    ArrayList<String> phraseArray;
+    String phrases;
+    DialogAdapter dialogAdapter = new DialogAdapter();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.story_viewer);
-        setTitle("Stories \t\t\t\t\t POINTS: " + Integer.toString(sp));
+        //setTitle("Stories \t\t\t\t\t POINTS: " + Integer.toString(sp));
+        setTitle("Stories");
         lv = (ListView) findViewById(R.id.storyViews);
         File file = new File(InputOutput.getFileDirectory() + "stn/" + Story1.stories);
         if (!file.exists())
@@ -153,6 +165,30 @@ public class StoryViewer extends ActionBarActivity {
         for (int s = 0; s <= storyList.size(); s++) {
             adapter.add(new DisplayTextAdapter(false, storyList.get(s), storyList.get(s)));
         }*/
+        dialogViewTextAdapter = new DialogViewTextAdapter(getApplicationContext(), R.layout.dialog_view_list);
+        /*for(int i = 0; i <= 15; i++)
+        {
+            dialogViewTextAdapter.add(new DialogDisplayListAdapter("TEST " + i));
+        }*/
+        try {
+            Scanner scanner = new Scanner(new File(InputOutput.getFileDirectory() + "/stn/" + Story1.st2_phrasal_verbs));
+            if (scanner.hasNextLine()) {
+                phrases = scanner.hasNextLine() ? scanner.nextLine() : "";
+                phraseArray = new ArrayList<String>(Arrays.asList(phrases.split(",")));
+            }
+        } catch (FileNotFoundException e) {
+            //e.printStackTrace();
+            dialogAdapter.dialogOut(StoryViewer.this, "One or more files were not found.\n" +
+                            "Please re-start this application if error persists.",
+                    true, false, true, "OK", null, null, null);
+        }
+        if (!phraseArray.isEmpty())
+        {
+            for (int i = 0; i < phraseArray.size() - 1; i++)
+            {
+                dialogViewTextAdapter.add(new DialogDisplayListAdapter(phraseArray.get(i)));
+            }
+        }
     }
 
     /* The click listener for ListView in the navigation drawer */
@@ -211,6 +247,10 @@ public class StoryViewer extends ActionBarActivity {
                 i = new Intent(StoryViewer.this, Story11.class);
                 startActivity(i);
                 break;
+            case 10:
+                i = new Intent(StoryViewer.this, StoryConclusion.class);
+                startActivity(i);
+                break;
             default:
                 break;
         }
@@ -228,6 +268,9 @@ public class StoryViewer extends ActionBarActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.aboutInfo:
+                showAbout();
+                return true;
             case R.id.phrasal_verb_look:
                 doPhrasalVerbLook();
                 return true;
@@ -238,10 +281,30 @@ public class StoryViewer extends ActionBarActivity {
 
     private void doPhrasalVerbLook()
     {
-        if(p <= 120)
+
+        //final DialogAdapter dialogAdapter = new DialogAdapter();
+        listView = new ListView(StoryViewer.this);
+        //dialogViewTextAdapter = new DialogViewTextAdapter(getApplicationContext(), R.layout.dialog_view_list);
+        listView.setAdapter(dialogViewTextAdapter);
+        /*for(int i = 0; i <= 15; i++)
+        {
+            dialogViewTextAdapter.add(new DialogDisplayListAdapter("TEST " + i));
+        }*/
+        dialogAdapter.dialogOutWithCustomView(StoryViewer.this, "Phrasal Verbs", true, false, false, /*VIEW*/listView, "OK", null, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogAdapter.dialogOutDialog.dismiss();
+            }
+        }, null);
+
+        /*if(p <= 120)
         {
             AlertDialog.Builder diag = new AlertDialog.Builder(StoryViewer.this);
-            diag.setMessage("You must have more than 120 points to see the phrasal verbs.");
+
+
+
+            int lineNumber = Thread.currentThread().getStackTrace()[2].getLineNumber();
+            diag.setMessage("\n\nAn unexpected error occurred\n\n\n\n[ERROR_CODE_"+lineNumber+"]");
             diag.setCancelable(false);
             diag.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -260,6 +323,15 @@ public class StoryViewer extends ActionBarActivity {
                     dialog.dismiss();
                 }
             });
-        }
+        }*/
+
+
+
+    }
+
+    private void showAbout()
+    {
+        Intent intent = new Intent(StoryViewer.this, About.class);
+        startActivity(intent);
     }
 }

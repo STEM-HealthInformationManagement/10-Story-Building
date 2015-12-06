@@ -14,8 +14,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import org.njcuacm.adapters.DialogAdapter;
+import org.njcuacm.adapters.Questions;
 import org.njcuacm.adapters.SelectiveDisplayTextAdapter;
 import org.njcuacm.adapters.SelectiveTextAdapter;
+import org.njcuacm.exceptions.NotAChoiceException;
 
 public class Story7 extends ActionBarActivity {
 
@@ -30,6 +32,8 @@ public class Story7 extends ActionBarActivity {
     public String resultingAnswer;
     Button button;
     DialogAdapter dialogAdapter;
+    Questions questions = new Questions();
+    int conversationSwitch = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,13 +48,33 @@ public class Story7 extends ActionBarActivity {
         adapter = new SelectiveTextAdapter(getApplicationContext(), R.layout.story_list);
         //Now set our ListView's adapter to the TextAdapter.
         lv.setAdapter(adapter);
-        showConversation();
         button = (Button) findViewById(R.id.questionButton);
-        button.setEnabled(true);
+        button.setEnabled(false);
+        button.setVisibility(View.INVISIBLE);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showResultingQuestion();
+                questions.showResultingQuestion(Story7.this, "Do you think Kristen will stop seeing Ray now?");
+            }
+        });
+        final Button nextButton = (Button) findViewById(R.id.nextButton);
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showConversation(conversationSwitch);
+                try {
+                    showMainQuestions(conversationSwitch);
+                } catch (NotAChoiceException e) {
+                    e.printStackTrace();
+                }
+                conversationSwitch++;
+                if (conversationSwitch > 4)
+                {
+                    nextButton.setEnabled(false);
+                    nextButton.setVisibility(View.INVISIBLE);
+                    button.setVisibility(View.VISIBLE);
+                    button.setEnabled(true);
+                }
             }
         });
 
@@ -64,18 +88,144 @@ public class Story7 extends ActionBarActivity {
         }, null);
     }
 
-    private void showConversation()
+    private void showConversation(int position)
     {
-        adapter.add(new SelectiveDisplayTextAdapter(false,
-                "\nDear Kristen,\n" +
-                        "You do not know me, but I am worried about you.  I saw you at that Ethiopian Restaurant with Ray Coning.  I asked the waiter to find out your name, and I looked it up, looked it in, looked it of on the Internet.   \n\n" +
-                        "Based over Based on, Based in the fact that I saw you and ray kissing and that I know Ray Coning’s wife, I have to tell you to stop dating a married man!   I’m not only worried about Lizzy (yes, she has a name), but you too.  I know Ray is going to fill up your head with dreams of the two of you living together—they will not come true.  This is similar on, similar to, similar of what he did last year with his daughter’s 5th grade teacher!  That situation is relevant to yours.  The teacher got fired when the principal caught her and Ray together in a classroom at night.  The entire school was talking about, talking into, taking on it. \n\n" +
-                        "The man cannot stop.  He is full of, full in, full on charm and lies.  He should be ashamed of himself, but he is too much of an egomaniac.  He’s successful in his career, but he’s a disaster as a husband.  \n\n" +
-                        "If his wife learns about this, it will crush her…again.  I wish she would just divorce him and be finished in, finished with, finished about him.   For the sake of his children—stay away from Ray.\n\n" +
-                        "I am not happy about finding this out or warning you.  It’s one of the most unpleasant things that I’ve had to do.\n\n" +
+        switch (position)
+        {
+            case 0:
+                adapter.add(new SelectiveDisplayTextAdapter(
+                        false,
+         /*COMMENT*/    "Dear Kristen,\n" +
+                        "You do not know me, but I am worried about you.  " +
+                        "I saw you at that Ethiopian Restaurant with Ray Coning.  " +
+                        "I asked the waiter to find out your name, and I looked it __________ on the Internet.   \n",
+         /*SPEAKER*/    "======EMAIL======",
+         /*COLOR*/      0));
+                break;
+            case 1:
+                adapter.add(new SelectiveDisplayTextAdapter(
+                        false,
+         /*COMMENT*/    "Based __________ the fact that I saw you and ray kissing and that I know Ray Coning’s wife, I have to tell you to stop dating a married man!   " +
+                        "I’m not only worried about Lizzy (yes, she has a name), but you too.  " +
+                        "I know Ray is going to fill up your head with dreams of the two of you living together—they will not come true.  " +
+                        "This is similar __________ what he did last year with his daughter’s 5th grade teacher!  " +
+                        "That situation is relevant to yours.  " +
+                        "The teacher got fired when the principal caught her and Ray together in a classroom at night.  " +
+                        "The entire school was talking __________ it. ",
+         /*SPEAKER*/    "",
+         /*COLOR*/      0));
+                break;
+            case 2:
+                adapter.add(new SelectiveDisplayTextAdapter(
+                        false,
+         /*COMMENT*/    "The man cannot stop.  " +
+                        "He is full __________ charm and lies. " +
+                        " He should be ashamed of himself, but he is too much of an egomaniac.  " +
+                        "He’s successful in his career, but he’s a disaster as a husband.  ",
+         /*SPEAKER*/    "",
+         /*COLOR*/      0));
+                break;
+            case 3:
+                adapter.add(new SelectiveDisplayTextAdapter(
+                        false,
+         /*COMMENT*/    "If his wife learns about this, it will crush her ... again.  " +
+                        "I wish she would just divorce him and be finished __________ him.   " +
+                        "For the sake of his children—stay away from Ray.",
+         /*SPEAKER*/    "",
+         /*COLOR*/      0));
+                break;
+            case 4:
+                adapter.add(new SelectiveDisplayTextAdapter(
+                        false,
+         /*COMMENT*/    "I am not happy about finding this out or warning you.  It’s one of the most unpleasant things that I’ve had to do.\n" +
                         "\n" +
                         "Sincerely,\n" +
-                        "Janet Healey \n\n", "====EMAIL====", 0));
+                        "Janet Healey \n",
+         /*SPEAKER*/    "",
+         /*COLOR*/      0));
+                break;
+        }
+    }
+
+    private void showMainQuestions(int position) throws NotAChoiceException
+    {
+        //Cases 0, 1, 2, 3
+        switch (position)
+        {
+            case 0:
+                questions.showThreeChoices(
+                        Story7.this,
+                        "up",
+                        "in",
+                        "of",
+                        "You do not know me, but I am worried about you.  " +
+                                "I saw you at that Ethiopian Restaurant with Ray Coning.  " +
+                                "I asked the waiter to find out your name, and I looked it __________ on the Internet.   ",
+                        0
+                );
+                break;
+            case 1:
+                questions.showThreeChoices(
+                        Story7.this,
+                        "about",
+                        "into",
+                        "on",
+                        "That situation is relevant to yours.  " +
+                                "The teacher got fired when the principal caught her and Ray together in a classroom at night. " +
+                                " The entire school was talking __________ it. ",
+                        0
+                );
+                questions.showThreeChoices(
+                        Story7.this,
+                        "on",
+                        "to",
+                        "of",
+                        "I’m not only worried about Lizzy (yes, she has a name), but you too.  " +
+                                "I know Ray is going to fill up your head with dreams of the two of you living together—" +
+                                "they will not come true.  " +
+                                "This is similar__________ what he did last year with his daughter’s 5th grade teacher!  " +
+                                "That situation is relevant to yours.  ",
+                        1
+                );
+                questions.showThreeChoices(
+                        Story7.this,
+                        "over",
+                        "on",
+                        "in",
+                        "Based __________ the fact that I saw you and ray kissing and that I know Ray Coning’s wife, " +
+                                "I have to tell you to stop dating a married man!   " +
+                                "I’m not only worried about Lizzy (yes, she has a name), but you too.  " +
+                                "I know Ray is going to fill up your head with dreams of the two of you living together—" +
+                                "they will not come true.  ",
+                        1
+                );
+                break;
+            case 2:
+                questions.showThreeChoices(
+                        Story7.this,
+                        "of",
+                        "in",
+                        "on",
+                        "The man cannot stop.  " +
+                                "He is full __________ charm and lies. " +
+                                " He should be ashamed of himself, but he is too much of an egomaniac. " +
+                                " He’s successful in his career, but he’s a disaster as a husband.  ",
+                        0
+                );
+                break;
+            case 3:
+                questions.showThreeChoices(
+                        Story7.this,
+                        "in",
+                        "with",
+                        "about",
+                        "If his wife learns about this, it will crush her ... again.  " +
+                                "I wish she would just divorce him and be finished __________ him.  " +
+                                " For the sake of his children—stay away from Ray.",
+                        1
+                );
+                break;
+        }
     }
 
     private void showResultingQuestion()
