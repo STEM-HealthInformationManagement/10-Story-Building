@@ -58,6 +58,8 @@ public class Story3 extends ActionBarActivity {
     public Button nextButton;
     Questions questions = new Questions();
     int conversationSwitch = 0;
+    int listSwitch = 0;
+    int breaker = 0;
     //DialogAdapter dialogAdapter;
 
     @Override
@@ -84,18 +86,40 @@ public class Story3 extends ActionBarActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addFakebookComments(conversationSwitch);
-                try {
-                    showMainQuestions(conversationSwitch);
-                } catch (NotAChoiceException e) {
-                    e.printStackTrace();
+                if(questions.isCancelled())
+                {
+                    //adapter.removeItem(conversationSwitch);
+                    //adapter.getView(conversationSwitch-1, null, null).setVisibility(View.GONE);
+                    listSwitch--;
+                    questions.setDialogBoxCancelled(false);
+
                 }
-                conversationSwitch++;
-                if (conversationSwitch > 5) {
-                    nextButton.setEnabled(false);
-                    nextButton.setVisibility(View.INVISIBLE);
-                    showResultingQuestionButton.setVisibility(View.VISIBLE);
-                    showResultingQuestionButton.setEnabled(true);
+                else if (conversationSwitch != listSwitch)
+                {
+                    try {
+                        showMainQuestions(listSwitch);
+                        listSwitch++;
+                    } catch (NotAChoiceException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else {
+                    questions.setDialogBoxCancelled(false);
+                    addFakebookComments(conversationSwitch);
+                    try {
+                        showMainQuestions(conversationSwitch);
+                    } catch (NotAChoiceException e) {
+                        e.printStackTrace();
+                    }
+                    conversationSwitch++;
+                    listSwitch++;
+                    if (conversationSwitch > 5 && listSwitch > 5) {
+                        nextButton.setEnabled(false);
+                        nextButton.setVisibility(View.INVISIBLE);
+                        showResultingQuestionButton.setVisibility(View.VISIBLE);
+                        showResultingQuestionButton.setEnabled(true);
+                    }
                 }
             }
         });
@@ -517,6 +541,7 @@ public class Story3 extends ActionBarActivity {
                                 "This couldn't have happened __________ a pair of nicer people.  " +
                                 "I can't wait until the party.",
                         1);
+
                 break;
             case 3:
                 questions.showThreeChoices(

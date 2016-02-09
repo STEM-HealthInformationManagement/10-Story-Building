@@ -23,6 +23,7 @@ import org.njcuacm.tenstory.StoryViewer;
  */
 public class Questions {
     public static String resultingAnswer = "";
+    public boolean isCancelled = false;
     /**
      * Context context - This is the context of the class using this method. (Eg. Story3.class)
      * String c1 - The first choice to be shown.
@@ -38,6 +39,10 @@ public class Questions {
         {
             throw new NotAChoiceException();
         }
+
+        //Set cancelled to false, because it's a public variable...
+        //isCancelled = false;
+
         // Set an EditText view to get user input
         //final EditText getChoice = new EditText(Story2.this);
         //getChoice.setPadding(10, 0, 10, 0);
@@ -71,13 +76,27 @@ public class Questions {
         //We now show the message and the speaker in the dialog.
         diag3.setMessage(message);
         //Make sure the user cannot cancel the Dialog until the user answers it.
-        diag3.setCancelable(false);
+        diag3.setCancelable(true);
         diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
 
+            }
+        });
+        diag3.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        diag3.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                isCancelled = true;
             }
         });
         final AlertDialog dialog3 = diag3.create();
@@ -121,6 +140,12 @@ public class Questions {
                 }
             }
         });
+        dialog3.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog3.cancel();
+            }
+        });
     }
 
     /**
@@ -137,6 +162,10 @@ public class Questions {
         {
             throw new NotAChoiceException();
         }
+
+        //Set cancelled to false
+        //isCancelled = false;
+
         // Set an EditText view to get user input
         //final EditText getChoice = new EditText(Story2.this);
         //getChoice.setPadding(10, 0, 10, 0);
@@ -166,7 +195,7 @@ public class Questions {
         //We now show the message and the speaker in the dialog.
         diag3.setMessage(message);
         //Make sure the user cannot cancel the Dialog until the user answers it.
-        diag3.setCancelable(false);
+        diag3.setCancelable(true);
         diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
 
             @Override
@@ -175,6 +204,21 @@ public class Questions {
 
             }
         });
+        diag3.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        diag3.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                isCancelled = true;
+            }
+        });
+
         final AlertDialog dialog3 = diag3.create();
         dialog3.show();
         //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
@@ -206,6 +250,12 @@ public class Questions {
                 }
             }
         });
+        dialog3.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog3.cancel();
+            }
+        });
     }
 
     /**
@@ -218,6 +268,10 @@ public class Questions {
      * */
     public void showEditableChoice(final Context context, String message, final String rightAnswer)
     {
+        //Set cancelled to false
+        //isCancelled = false;
+
+
         //Initialize Editable answer
         final EditText answer = new EditText(context);
         answer.setHint("Type your answer HERE--ANSWER_FOR_TESTING: " + rightAnswer);
@@ -245,13 +299,27 @@ public class Questions {
         //We now show the message and the speaker in the dialog.
         diag3.setMessage(message);
         //Make sure the user cannot cancel the Dialog until the user answers it.
-        diag3.setCancelable(false);
+        diag3.setCancelable(true);
         diag3.setPositiveButton("SUBMIT", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // TODO Auto-generated method stub
 
+            }
+        });
+        diag3.setNegativeButton("GO BACK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
+
+            }
+        });
+        diag3.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                isCancelled = true;
             }
         });
         final AlertDialog dialog3 = diag3.create();
@@ -271,6 +339,12 @@ public class Questions {
                 {
                     Toast.makeText(context.getApplicationContext(), "Try Again", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        dialog3.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog3.cancel();
             }
         });
     }
@@ -355,5 +429,15 @@ public class Questions {
     public void setResultingAnswer(String resultingAnswer)
     {
         Questions.resultingAnswer = resultingAnswer;
+    }
+
+    public boolean isCancelled()
+    {
+        return isCancelled;
+    }
+
+    public void setDialogBoxCancelled(boolean cancelled)
+    {
+        isCancelled = cancelled;
     }
 }

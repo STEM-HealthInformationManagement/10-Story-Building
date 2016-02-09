@@ -45,6 +45,10 @@ public class FakebookTextAdapter extends ArrayAdapter<FakebookDisplayTextAdapter
         return this.countries.get(index);
     }
 
+    public void removeItem(int index) {
+        this.countries.remove(countries.get(index - 1));
+    }
+
     public View getView(int position, View convertView, ViewGroup parent) {
         View row = convertView;
         if (row == null) {
